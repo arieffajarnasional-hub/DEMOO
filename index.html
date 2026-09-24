@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ARISA Benchmark">
+  <title>ARISA — AI Rice Leaf Diagnostic & Benchmark Station</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/logo/logo-full.svg" type="image/svg+xml">
+
+  <style>
+    /* ══════════════════════════════════════════════════════════════
+       DESIGN SYSTEM: CLEAN PRECISION ENGINEERING (ANTI-AI SLOP)
+       Palet Slate Modern, Tipografi Bersih, Kontras Tajam, Nol Gimmick
+       ══════════════════════════════════════════════════════════════ */
+    :root {
+      --bg-main: #0b0f19;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1a2234;
+      --bg-card: #151d2e;
+      --border-subtle: #243046;
+      --border-focus: #3b82f6;
+      --border-emerald: #10b981;
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --emerald: #10b981;
+      --emerald-bg: rgba(16, 185, 129, 0.12);
+      --amber: #f59e0b;
+      --amber-bg: rgba(245, 158, 11, 0.12);
+      --rose: #ef4444;
+      --rose-bg: rgba(239, 68, 68, 0.12);
+      --blue: #3b82f6;
+      --blue-bg: rgba(59, 130, 246, 0.12);
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "Cascadia Code", "Fira Code", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: var(--emerald-bg);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+
+    /* Container Utama */
+    main {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Section: Leaf Selector Bar */
+    .selector-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .selector-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .selector-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-filter-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+    }
+
+    .chip-btn.active {
+      background: var(--blue-bg);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .chip-btn.random-spin {
+      background: var(--amber-bg);
+      color: #fde68a;
+      border-color: rgba(245, 158, 11, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip-btn.random-spin:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+
+    /* Leaf Thumbnails Horizontal Bar */
+    .leaf-carousel-wrapper {
+      position: relative;
+    }
+
+    .leaf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      max-height: 230px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .leaf-grid::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .leaf-grid::-webkit-scrollbar-track {
+      background: var(--bg-main);
+      border-radius: 4px;
+    }
+
+    .leaf-grid::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 4px;
+    }
+
+    .leaf-card-item {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      user-select: none;
+      text-align: left;
+    }
+
+    .leaf-card-item:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+      background: var(--bg-surface-elevated);
+    }
+
+    .leaf-card-item.selected {
+      border-color: var(--emerald);
+      background: rgba(16, 185, 129, 0.08);
+      box-shadow: 0 0 0 1px var(--emerald);
+    }
+
+    .leaf-thumb-box {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #000000;
+      position: relative;
+    }
+
+    .leaf-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .leaf-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .leaf-card-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leaf-card-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+    }
+
+    .pill-dsi {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .pill-dsi.healthy {
+      color: var(--emerald);
+      background: var(--emerald-bg);
+    }
+
+    .pill-dsi.mild {
+      color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    .pill-dsi.severe {
+      color: var(--rose);
+      background: var(--rose-bg);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SECTION: MAIN BENCHMARK DISPLAY STAGE (SPLIT VIEW)
+       ══════════════════════════════════════════════════════════════ */
+    .benchmark-stage {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .benchmark-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Visual Inspection Card */
+    .visual-inspection-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .visual-viewport {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #000000;
+      position: relative;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.2s ease;
+    }
+
+    .viewport-overlay-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-primary);
+    }
+
+    .visual-toggle-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--blue-bg);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    /* Diagnostics & Benchmark Data Columns */
+    .data-cards-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+    }
+
+    /* Header Penyakit */
+    .disease-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .disease-title-main {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.4px;
+      line-height: 1.3;
+    }
+
+    .latin-sub {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .risk-badge {
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .risk-badge.rendah {
+      background: var(--emerald-bg);
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .risk-badge.sedang {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .risk-badge.tinggi {
+      background: var(--rose-bg);
+      color: var(--rose);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Metrics Grid */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 640px) {
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .metric-cell {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .metric-cell-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-weight: 600;
+    }
+
+    .metric-cell-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+    }
+
+    .metric-cell-sub {
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    /* Progress bar DSI */
+    .progress-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 7px;
+      background: var(--bg-main);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--emerald);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Technical Benchmark Comparison Table */
+    .benchmark-tech-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tech-box-header {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--blue);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tech-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      font-size: 0.74rem;
+    }
+
+    @media (max-width: 640px) {
+      .tech-specs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .spec-k {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+    }
+
+    .spec-v {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Agronomic Treatment Card */
+    .treatment-box {
+      background: var(--bg-card);
+      border-left: 3px solid var(--border-focus);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .treatment-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #93c5fd;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .treatment-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* PWA Install Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .modal-logo {
+      height: 48px;
+      width: auto;
+    }
+
+    .modal-card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .modal-card p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--blue);
+      color: #ffffff;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--bg-main);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand-group">
+      <img src="assets/logo/logo-full.svg" alt="ARISA Logo" class="brand-logo-img" onerror="this.src='icon.svg'">
+      <div class="brand-text">
+        <h1>
+          <span>ARISA</span>
+          <span style="font-weight:400;color:var(--text-muted);font-size:0.85rem;">| Benchmark Station</span>
+        </h1>
+        <p>Agronomic Risk Intelligence System for Agriculture</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="badge-status">
+        <span class="status-dot"></span>
+        <span>Edge TFLite Active</span>
+      </div>
+      <button class="btn-outline" onclick="openPwaModal()">
+        <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        <span>Pasang PWA</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    <!-- Section 1: Interactive Leaf Selector (Direct Benchmark Trigger) -->
+    <section class="selector-section">
+      <div class="selector-header">
+        <div class="selector-title">
+          <svg style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Pilih Sampel Daun Padi (Klik untuk Benchmark Instan)</span>
+        </div>
+
+        <div class="category-filter-chips">
+          <button class="chip-btn active" onclick="filterCategory('all', this)">Semua (16)</button>
+          <button class="chip-btn" onclick="filterCategory('blast', this)">Blas Daun (4)</button>
+          <button class="chip-btn" onclick="filterCategory('blight', this)">Hawar Bakteri (4)</button>
+          <button class="chip-btn" onclick="filterCategory('brownspot', this)">Bercak Cokelat (4)</button>
+          <button class="chip-btn" onclick="filterCategory('healthy', this)">Kontrol Sehat (4)</button>
+          <button class="chip-btn random-spin" onclick="pickRandomLeaf()">
+            <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Pilih Acak</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Leaf Grid -->
+      <div class="leaf-grid" id="leafGridContainer">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Section 2: Split Benchmark & Diagnostics Stage -->
+    <section class="benchmark-stage">
+      
+      <!-- Visual Inspection Window -->
+      <div class="visual-inspection-card">
+        <div class="visual-viewport" id="viewportContainer">
+          <img id="mainViewImage" src="assets/results/segmented_02_blast.jpg" alt="Visual Analisis Daun">
+          <div class="viewport-overlay-badge" id="viewportBadge">
+            <svg style="width:12px;height:12px;stroke:var(--emerald);fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span id="badgeModeLabel">Segmentasi U-Net (Mask Aktif)</span>
+          </div>
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="visual-toggle-tabs">
+          <button class="tab-btn active" id="btnTabSegmented" onclick="switchVisualMode('segmented')">
+            <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>
+            <span>Overlay U-Net AI</span>
+          </button>
+          <button class="tab-btn" id="btnTabOriginal" onclick="switchVisualMode('original')">
+            <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Citra Asli Lapangan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Benchmark Metrics & Analytics Data -->
+      <div class="data-cards-column">
+        <div class="panel-card">
+          <!-- Disease Title & Risk Badge -->
+          <div class="disease-header-row">
+            <div>
+              <h2 class="disease-title-main" id="valDiseaseTitle">Penyakit Blas Daun (Pyricularia)</h2>
+              <p class="latin-sub" id="valLatinName">Pyricularia oryzae (Magnaporthe)</p>
+            </div>
+            <span class="risk-badge sedang" id="valRiskBadge">Risiko Sedang</span>
+          </div>
+
+          <!-- Key Metrics Grid -->
+          <div class="metrics-row">
+            <div class="metric-cell">
+              <span class="metric-cell-label">Akurasi Model</span>
+              <span class="metric-cell-val" id="valConfidence">88.9%</span>
+              <span class="metric-cell-sub">Edge INT8 Quant</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Indeks DSI</span>
+              <span class="metric-cell-val" id="valDsi">14.68%</span>
+              <span class="metric-cell-sub" id="valDsiCategory">Ringan</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Fase Tumbuh</span>
+              <span class="metric-cell-val" id="valFase" style="font-size:0.95rem;">Generatif</span>
+              <span class="metric-cell-sub" id="valFaseWeight">Bobot W: 1.0</span>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Skor IARI</span>
+              <span class="metric-cell-val" id="valIari">17.62</span>
+              <span class="metric-cell-sub">Formula Terpadu</span>
+            </div>
+          </div>
+
+          <!-- DSI Severity Meter -->
+          <div class="progress-wrapper">
+            <div class="progress-labels">
+              <span>Tingkat Keparahan Lesi (Disease Severity Index)</span>
+              <span id="valPixelRatio">2.790 px lesi / 19.001 px daun</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="valProgressBar" style="width: 14.68%;"></div>
+            </div>
+          </div>
+
+          <!-- Technical Edge vs Cloud Benchmark Specs -->
+          <div class="benchmark-tech-box">
+            <div class="tech-box-header">
+              <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Spesifikasi Benchmark Inferensi Edge & Hardware</span>
+            </div>
+            <div class="tech-specs-grid">
+              <div class="spec-item">
+                <span class="spec-k">Latensi Edge (Pi 4)</span>
+                <span class="spec-v" id="valEdgeLatency">412 ms (INT8)</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-k">Komparasi Cloud H5</span>
+                <span class="spec-v">89 ms (FP32 Server)</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-k">Ukuran Model</span>
+                <span class="spec-v">4.7 MB (89.8% Hemat)</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-k">Gatekeeper Kanopi</span>
+                <span class="spec-v" style="color:var(--emerald)">Lolos 7/7 Filter Padi</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-k">U-Net Guided Fusion</span>
+                <span class="spec-v" style="color:#93c5fd">Tervalidasi Konsisten</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-k">Penggunaan RAM</span>
+                <span class="spec-v">145 MB (Ringan)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agronomic Treatment & PPL Recommendation -->
+          <div class="treatment-box">
+            <span class="treatment-title">
+              <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Rekomendasi Agronomi & Penanganan PPL</span>
+            </span>
+            <p class="treatment-desc" id="valTreatment">
+              Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- PWA Install Modal -->
+  <div class="modal-backdrop" id="pwaModalBackdrop" onclick="if(event.target===this) closePwaModal()">
+    <div class="modal-card">
+      <img src="assets/logo/logo-full.svg" alt="ARISA Logo" class="modal-logo" onerror="this.src='icon.svg'">
+      <h2>Pasang Aplikasi ARISA</h2>
+      <p>Aplikasi Progressive Web App ini dapat dipasang langsung ke tablet atau smartphone Anda agar berjalan secara instan dan mandiri saat demonstrasi lapangan.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="triggerPwaInstall()">Pasang ke Layar Utama</button>
+        <button class="btn-secondary" onclick="closePwaModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════
+    // DATASET 16 SAMPEL DAUN LENGKAP DENGAN METRIK BENCHMARK RESMI
+    // ══════════════════════════════════════════════════════════════
+    const leafData = [
+      {
+        id: "sample_01",
+        label: "Blas 01",
+        category: "blast",
+        original_image: "assets/dataset/blast_02.jpg",
+        segmented_image: "assets/results/segmented_01_blast.jpg",
+        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
+        latin_name: "Pyricularia oryzae (Magnaporthe)",
+        confidence_disease: "86.5%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 4.34,
+        dsi_category: "Sangat Ringan",
+        pixel_info: "886 px lesi / 20.401 px daun",
+        iari_score: 5.21,
+        risk_level: "rendah",
+        risk_label: "Risiko Rendah",
+        edge_latency: "398 ms (INT8)",
+        treatment: "Lesi awal terlokalisasi. Aplikasikan fungisida protektif nabati (ekstrak daun nimba/serai wangi) atau trisiklazol dosis rendah. Pertahankan aerasi tajuk tanaman."
+      },
+      {
+        id: "sample_02",
+        label: "Blas 02",
+        category: "blast",
+        original_image: "assets/dataset/blast_04.jpg",
+        segmented_image: "assets/results/segmented_02_blast.jpg",
+        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
+        latin_name: "Pyricularia oryzae (Magnaporthe)",
+        confidence_disease: "88.9%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 14.68,
+        dsi_category: "Ringan",
+        pixel_info: "2.790 px lesi / 19.001 px daun",
+        iari_score: 17.62,
+        risk_level: "sedang",
+        risk_label: "Risiko Sedang",
+        edge_latency: "412 ms (INT8)",
+        treatment: "Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan dan lakukan pengeringan sawah berselang."
+      },
+      {
+        id: "sample_03",
+        label: "Blas 03",
+        category: "blast",
+        original_image: "assets/dataset/blast_06.jpg",
+        segmented_image: "assets/results/segmented_03_blast.jpg",
+        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
+        latin_name: "Pyricularia oryzae (Magnaporthe)",
+        confidence_disease: "84.1%",
+        predicted_fase: "Vegetatif",
+        fase_weight: 0.5,
+        dsi_score: 17.07,
+        dsi_category: "Ringan",
+        pixel_info: "6.141 px lesi / 35.969 px daun",
+        iari_score: 10.24,
+        risk_level: "sedang",
+        risk_label: "Risiko Sedang",
+        edge_latency: "425 ms (INT8)",
+        treatment: "Fase vegetatif sensitif terhadap penyebaran spora blas. Semprot fungisida kasugamisin atau azoksistrobin. Tambahkan kalium (KCl) untuk memperkuat dinding sel daun."
+      },
+      {
+        id: "sample_04",
+        label: "Blas 04",
+        category: "blast",
+        original_image: "assets/dataset/blast_08.jpg",
+        segmented_image: "assets/results/segmented_04_blast.jpg",
+        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
+        latin_name: "Pyricularia oryzae (Magnaporthe)",
+        confidence_disease: "87.5%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 19.16,
+        dsi_category: "Ringan",
+        pixel_info: "5.498 px lesi / 28.702 px daun",
+        iari_score: 22.99,
+        risk_level: "tinggi",
+        risk_label: "Risiko Tinggi",
+        edge_latency: "418 ms (INT8)",
+        treatment: "Lesi berbentuk belah ketupat mulai berfusi. Segera lakukan sanitasi daun sakit terluar, kendalikan genangan air, dan semprot fungisida sistemik berselang."
+      },
+      {
+        id: "sample_05",
+        label: "Hawar 01",
+        category: "blight",
+        original_image: "assets/dataset/blight_01.jpg",
+        segmented_image: "assets/results/segmented_05_blight.jpg",
+        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
+        latin_name: "Xanthomonas oryzae pv. oryzae",
+        confidence_disease: "81.4%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 8.83,
+        dsi_category: "Ringan",
+        pixel_info: "2.253 px lesi / 25.508 px daun",
+        iari_score: 8.83,
+        risk_level: "sedang",
+        risk_label: "Risiko Sedang",
+        edge_latency: "405 ms (INT8)",
+        treatment: "Lakukan pengeringan petakan sawah secara berkala (irigasi berselang). Gunakan bakterisida tembaga hidroksida (misal Kocide) dan bersihkan gulma pematang pembawa inang."
+      },
+      {
+        id: "sample_06",
+        label: "Hawar 02",
+        category: "blight",
+        original_image: "assets/dataset/blight_02.jpg",
+        segmented_image: "assets/results/segmented_06_blight.jpg",
+        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
+        latin_name: "Xanthomonas oryzae pv. oryzae",
+        confidence_disease: "88.5%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 29.58,
+        dsi_category: "Sedang",
+        pixel_info: "2.947 px lesi / 9.964 px daun",
+        iari_score: 29.58,
+        risk_level: "tinggi",
+        risk_label: "Risiko Tinggi",
+        edge_latency: "416 ms (INT8)",
+        treatment: "Gejala hawar garis meluas di tepi helai daun. Hentikan pemupukan urea sepenuhnya, gunakan bakterisida kasugamisin + tembaga oksiklorida, dan buang daun yang terinfeksi parah."
+      },
+      {
+        id: "sample_07",
+        label: "Hawar 03",
+        category: "blight",
+        original_image: "assets/dataset/blight_03.jpg",
+        segmented_image: "assets/results/segmented_07_blight.jpg",
+        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
+        latin_name: "Xanthomonas oryzae pv. oryzae",
+        confidence_disease: "91.0%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 57.18,
+        dsi_category: "Berat",
+        pixel_info: "8.875 px lesi / 15.520 px daun",
+        iari_score: 57.18,
+        risk_level: "tinggi",
+        risk_label: "BAHAYA KRITIS",
+        edge_latency: "432 ms (INT8)",
+        treatment: "Tingkat infeksi berat (>50% kanopi rusak). Segera isolasi saluran irigasi agar bakteri Xanthomonas tidak mengalir ke petakan tetangga. Aplikasi perlakuan darurat bakterisida tembaga."
+      },
+      {
+        id: "sample_08",
+        label: "Hawar 04",
+        category: "blight",
+        original_image: "assets/dataset/blight_04.jpg",
+        segmented_image: "assets/results/segmented_08_blight.jpg",
+        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
+        latin_name: "Xanthomonas oryzae pv. oryzae",
+        confidence_disease: "83.7%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 35.32,
+        dsi_category: "Sedang",
+        pixel_info: "3.621 px lesi / 10.251 px daun",
+        iari_score: 35.32,
+        risk_level: "tinggi",
+        risk_label: "Risiko Tinggi",
+        edge_latency: "421 ms (INT8)",
+        treatment: "Klorosis dan nekrosis tepi helai mengancam proses fotosintesis malai. Lakukan pengeringan 3-4 hari, semprot bakterisida asam oksolinik atau tembaga sulfat."
+      },
+      {
+        id: "sample_09",
+        label: "Bercak 01",
+        category: "brownspot",
+        original_image: "assets/dataset/brownspot_01.jpg",
+        segmented_image: "assets/results/segmented_09_brownspot.jpg",
+        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
+        latin_name: "Bipolaris oryzae (Cochliobolus)",
+        confidence_disease: "89.1%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 0.69,
+        dsi_category: "Sangat Ringan",
+        pixel_info: "119 px lesi / 17.307 px daun",
+        iari_score: 0.76,
+        risk_level: "rendah",
+        risk_label: "Risiko Rendah",
+        edge_latency: "402 ms (INT8)",
+        treatment: "Lesi bercak cokelat kecil mengindikasikan defisiensi nutrisi mikro/Silika. Berikan pupuk daun Silika dan Kalium (KCl) untuk meningkatkan ketahanan mekanik kutikula daun."
+      },
+      {
+        id: "sample_10",
+        label: "Bercak 02",
+        category: "brownspot",
+        original_image: "assets/dataset/brownspot_03.jpg",
+        segmented_image: "assets/results/segmented_10_brownspot.jpg",
+        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
+        latin_name: "Bipolaris oryzae (Cochliobolus)",
+        confidence_disease: "86.3%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 1.54,
+        dsi_category: "Sangat Ringan",
+        pixel_info: "455 px lesi / 29.603 px daun",
+        iari_score: 1.69,
+        risk_level: "rendah",
+        risk_label: "Risiko Rendah",
+        edge_latency: "410 ms (INT8)",
+        treatment: "Kondisi tanaman relatif aman. Tingkatkan drainase tanah dan pastikan kecukupan pupuk Fosfat dan Kalium agar tanaman tidak rentan terhadap jamur Helminthosporium."
+      },
+      {
+        id: "sample_11",
+        label: "Bercak 03",
+        category: "brownspot",
+        original_image: "assets/dataset/brownspot_05.jpg",
+        segmented_image: "assets/results/segmented_11_brownspot.jpg",
+        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
+        latin_name: "Bipolaris oryzae (Cochliobolus)",
+        confidence_disease: "85.8%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 0.67,
+        dsi_category: "Sangat Ringan",
+        pixel_info: "208 px lesi / 31.256 px daun",
+        iari_score: 0.74,
+        risk_level: "rendah",
+        risk_label: "Risiko Rendah",
+        edge_latency: "408 ms (INT8)",
+        treatment: "Bercak oval cokelat minim. Lakukan penyemprotan pupuk organik cair yang mengandung agen hayati Trichoderma spp. untuk menekan perkecambahan konidia jamur patogen."
+      },
+      {
+        id: "sample_12",
+        label: "Bercak 04",
+        category: "brownspot",
+        original_image: "assets/dataset/brownspot_07.jpg",
+        segmented_image: "assets/results/segmented_12_brownspot.jpg",
+        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
+        latin_name: "Bipolaris oryzae (Cochliobolus)",
+        confidence_disease: "89.5%",
+        predicted_fase: "Generatif",
+        fase_weight: 1.0,
+        dsi_score: 0.20,
+        dsi_category: "Sangat Ringan",
+        pixel_info: "24 px lesi / 11.713 px daun",
+        iari_score: 0.22,
+        risk_level: "rendah",
+        risk_label: "Risiko Rendah",
+        edge_latency: "405 ms (INT8)",
+        treatment: "Hanya terdeteksi lesi minor sporadis. Pertahankan manajemen air yang baik, hindari kekeringan tanah yang berkepanjangan."
+      },
+      {
+        id: "sample_13",
+        label: "Sehat 01",
+        category: "healthy",
+        original_image: "assets/dataset/healthy_01.jpg",
+        segmented_image: "assets/results/segmented_13_healthy.jpg",
+        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
+        latin_name: "Oryza sativa (Kondisi Prima)",
+        confidence_disease: "99.8%",
+        predicted_fase: "Panen",
+        fase_weight: 0.3,
+        dsi_score: 0.00,
+        dsi_category: "Nol Lesi",
+        pixel_info: "0 px lesi / 8.125 px daun",
+        iari_score: 0.00,
+        risk_level: "rendah",
+        risk_label: "AMAN (SEHAT)",
+        edge_latency: "385 ms (INT8)",
+        treatment: "Tanaman padi dalam kondisi fisiologis sempurna bebas patogen. Tidak diperlukan tindakan fungisida kimia. Lanjutkan pemantauan rutin dan pengairan terjadwal."
+      },
+      {
+        id: "sample_14",
+        label: "Sehat 02",
+        category: "healthy",
+        original_image: "assets/dataset/healthy_02.jpg",
+        segmented_image: "assets/results/segmented_14_healthy.jpg",
+        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
+        latin_name: "Oryza sativa (Kondisi Prima)",
+        confidence_disease: "98.7%",
+        predicted_fase: "Panen",
+        fase_weight: 0.3,
+        dsi_score: 0.00,
+        dsi_category: "Nol Lesi",
+        pixel_info: "0 px lesi / 11.000 px daun",
+        iari_score: 0.00,
+        risk_level: "rendah",
+        risk_label: "AMAN (SEHAT)",
+        edge_latency: "390 ms (INT8)",
+        treatment: "Helai daun bersih dengan pigmen klorofil tinggi. Pertahankan manajemen hara berimbang menuju pengisian bulir padi maksimal."
+      },
+      {
+        id: "sample_15",
+        label: "Sehat 03",
+        category: "healthy",
+        original_image: "assets/dataset/healthy_03.jpg",
+        segmented_image: "assets/results/segmented_15_healthy.jpg",
+        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
+        latin_name: "Oryza sativa (Kondisi Prima)",
+        confidence_disease: "99.3%",
+        predicted_fase: "Vegetatif",
+        fase_weight: 0.5,
+        dsi_score: 0.00,
+        dsi_category: "Nol Lesi",
+        pixel_info: "0 px lesi / 8.463 px daun",
+        iari_score: 0.00,
+        risk_level: "rendah",
+        risk_label: "AMAN (SEHAT)",
+        edge_latency: "388 ms (INT8)",
+        treatment: "Pertumbuhan vegetatif daun anakan optimal tanpa infeksi jamur atau bakteri. Terus jaga kebersihan pematang sawah."
+      },
+      {
+        id: "sample_16",
+        label: "Sehat 04",
+        category: "healthy",
+        original_image: "assets/dataset/healthy_05.jpg",
+        segmented_image: "assets/results/segmented_16_healthy.jpg",
+        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
+        latin_name: "Oryza sativa (Kondisi Prima)",
+        confidence_disease: "99.8%",
+        predicted_fase: "Panen",
+        fase_weight: 0.3,
+        dsi_score: 0.00,
+        dsi_category: "Nol Lesi",
+        pixel_info: "0 px lesi / 12.201 px daun",
+        iari_score: 0.00,
+        risk_level: "rendah",
+        risk_label: "AMAN (SEHAT)",
+        edge_latency: "382 ms (INT8)",
+        treatment: "Tajuk kanopi sehat dan seragam. Efisiensi fotosintesis optimal untuk pemasakan bulir padi."
+      }
+    ];
+
+    // State Aplikasi
+    let currentFilter = 'all';
+    let selectedLeaf = leafData[1]; // Default Blas 02
+    let visualMode = 'segmented'; // 'segmented' atau 'original'
+
+    // DOM Elements
+    const leafGridContainer = document.getElementById('leafGridContainer');
+    const mainViewImage = document.getElementById('mainViewImage');
+    const badgeModeLabel = document.getElementById('badgeModeLabel');
+    const btnTabSegmented = document.getElementById('btnTabSegmented');
+    const btnTabOriginal = document.getElementById('btnTabOriginal');
+
+    // Metrics DOM
+    const valDiseaseTitle = document.getElementById('valDiseaseTitle');
+    const valLatinName = document.getElementById('valLatinName');
+    const valRiskBadge = document.getElementById('valRiskBadge');
+    const valConfidence = document.getElementById('valConfidence');
+    const valDsi = document.getElementById('valDsi');
+    const valDsiCategory = document.getElementById('valDsiCategory');
+    const valFase = document.getElementById('valFase');
+    const valFaseWeight = document.getElementById('valFaseWeight');
+    const valIari = document.getElementById('valIari');
+    const valPixelRatio = document.getElementById('valPixelRatio');
+    const valProgressBar = document.getElementById('valProgressBar');
+    const valEdgeLatency = document.getElementById('valEdgeLatency');
+    const valTreatment = document.getElementById('valTreatment');
+
+    // Render Grid Selector Daun
+    function renderLeafGrid() {
+      leafGridContainer.innerHTML = '';
+      const filtered = currentFilter === 'all' 
+        ? leafData 
+        : leafData.filter(d => d.category === currentFilter);
+
+      filtered.forEach((item) => {
+        const isSelected = selectedLeaf && selectedLeaf.id === item.id;
+        const dsiClass = item.dsi_score === 0 ? 'healthy' : item.dsi_score < 20 ? 'mild' : 'severe';
+
+        const card = document.createElement('div');
+        card.className = `leaf-card-item ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectLeaf(item);
+
+        card.innerHTML = `
+          <div class="leaf-thumb-box">
+            <img src="${item.original_image}" alt="${item.label}" loading="lazy">
+          </div>
+          <div class="leaf-card-meta">
+            <span class="leaf-card-label">${item.label}</span>
+            <div class="leaf-card-sub">
+              <span>${item.category.toUpperCase()}</span>
+              <span class="pill-dsi ${dsiClass}">${item.dsi_score.toFixed(1)}%</span>
+            </div>
+          </div>
+        `;
+        leafGridContainer.appendChild(card);
+      });
+    }
+
+    // Filter Kategori Daun
+    function filterCategory(cat, btn) {
+      currentFilter = cat;
+      document.querySelectorAll('.chip-btn:not(.random-spin)').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderLeafGrid();
+    }
+
+    // Pilih Daun (Instant Benchmark Update)
+    function selectLeaf(item) {
+      selectedLeaf = item;
+      
+      // Update selected class di DOM
+      document.querySelectorAll('.leaf-card-item').forEach(el => el.classList.remove('selected'));
+      renderLeafGrid();
+
+      // Update Benchmark Data Seketika (Zero Delay)
+      updateBenchmarkDisplay(item);
+    }
+
+    // Pilih Daun Secara Acak
+    function pickRandomLeaf() {
+      const filtered = currentFilter === 'all' 
+        ? leafData 
+        : leafData.filter(d => d.category === currentFilter);
+      const randomIndex = Math.floor(Math.random() * filtered.length);
+      selectLeaf(filtered[randomIndex]);
+    }
+
+    // Update Display Benchmark
+    function updateBenchmarkDisplay(item) {
+      valDiseaseTitle.textContent = item.predicted_disease;
+      valLatinName.textContent = item.latin_name;
+      
+      valConfidence.textContent = item.confidence_disease;
+      valDsi.textContent = item.dsi_score.toFixed(2) + "%";
+      valDsiCategory.textContent = item.dsi_category;
+      valFase.textContent = item.predicted_fase;
+      valFaseWeight.textContent = `Bobot W: ${item.fase_weight.toFixed(1)}`;
+      valIari.textContent = item.iari_score.toFixed(2);
+      valPixelRatio.textContent = item.pixel_info;
+      valEdgeLatency.textContent = item.edge_latency;
+      valTreatment.textContent = item.treatment;
+
+      // Risk Badge Color
+      valRiskBadge.className = `risk-badge ${item.risk_level}`;
+      valRiskBadge.textContent = item.risk_label;
+
+      // Progress Meter Fill
+      const clampedPercent = Math.min(Math.max(item.dsi_score, 0), 100);
+      valProgressBar.style.width = clampedPercent + "%";
+      if (item.dsi_score === 0) {
+        valProgressBar.style.backgroundColor = "var(--emerald)";
+      } else if (item.dsi_score < 20) {
+        valProgressBar.style.backgroundColor = "var(--amber)";
+      } else {
+        valProgressBar.style.backgroundColor = "var(--rose)";
+      }
+
+      // Update Visual Mode Image
+      renderVisualImage();
+    }
+
+    // Ganti Mode Tampilan Citra (Segmentasi vs Asli)
+    function switchVisualMode(mode) {
+      visualMode = mode;
+      if (mode === 'segmented') {
+        btnTabSegmented.classList.add('active');
+        btnTabOriginal.classList.remove('active');
+        badgeModeLabel.textContent = "Segmentasi U-Net (Mask Aktif)";
+      } else {
+        btnTabOriginal.classList.add('active');
+        btnTabSegmented.classList.remove('active');
+        badgeModeLabel.textContent = "Citra Asli Lapangan (Raw RGB)";
+      }
+      renderVisualImage();
+    }
+
+    function renderVisualImage() {
+      if (!selectedLeaf) return;
+      if (visualMode === 'segmented') {
+        mainViewImage.src = selectedLeaf.segmented_image;
+      } else {
+        mainViewImage.src = selectedLeaf.original_image;
+      }
+    }
+
+    // Modal PWA
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function openPwaModal() {
+      document.getElementById('pwaModalBackdrop').classList.add('open');
+    }
+
+    function closePwaModal() {
+      document.getElementById('pwaModalBackdrop').classList.remove('open');
+    }
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          deferredPrompt = null;
+          closePwaModal();
+        });
+      } else {
+        alert("Untuk memasang PWA:\n1. Buka menu browser Anda (titik tiga atau tombol Share).\n2. Pilih 'Tambahkan ke Layar Utama' (Add to Home Screen).");
+        closePwaModal();
+      }
+    }
+
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+          console.log('[PWA] SW registration failed:', err);
+        });
+      });
+    }
+
+    // Inisialisasi awal
+    renderLeafGrid();
+    updateBenchmarkDisplay(selectedLeaf);
+  </script>
+</body>
+</html>

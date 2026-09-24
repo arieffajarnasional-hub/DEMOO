@@ -1,0 +1,12 @@
+{
+  "name": "arisa-pwa-simulation",
+  "version": "1.0.0",
+  "description": "ARISA PWA Leaf Diagnostic & AI Benchmark Simulator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["arisa", "edge-ai", "rice-leaf-diagnostic", "pwa", "railway"],
+  "author": "Arief Fajar & ARISA Team",
+  "license": "MIT"
+}
