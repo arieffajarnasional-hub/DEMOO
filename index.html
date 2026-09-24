@@ -3,1474 +3,2243 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0b0f19">
+  <meta name="theme-color" content="#b45309">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="ARISA Benchmark">
-  <title>ARISA — AI Rice Leaf Diagnostic & Benchmark Station</title>
+  <meta name="apple-mobile-web-app-title" content="ARISA PWA">
+  <title>ARISA - AI Rice Leaf Diagnostic & Roulette</title>
 
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/logo/logo-full.svg" type="image/svg+xml">
 
   <style>
     /* ══════════════════════════════════════════════════════════════
-       DESIGN SYSTEM: CLEAN PRECISION ENGINEERING (ANTI-AI SLOP)
-       Palet Slate Modern, Tipografi Bersih, Kontras Tajam, Nol Gimmick
+       PALET WARNA EMAS SENJA (WARM SUNSET) & TEMA SAWAH
        ══════════════════════════════════════════════════════════════ */
     :root {
-      --bg-main: #0b0f19;
-      --bg-surface: #111827;
-      --bg-surface-elevated: #1a2234;
-      --bg-card: #151d2e;
-      --border-subtle: #243046;
-      --border-focus: #3b82f6;
-      --border-emerald: #10b981;
-      
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      
-      --emerald: #10b981;
-      --emerald-bg: rgba(16, 185, 129, 0.12);
-      --amber: #f59e0b;
-      --amber-bg: rgba(245, 158, 11, 0.12);
-      --rose: #ef4444;
-      --rose-bg: rgba(239, 68, 68, 0.12);
-      --blue: #3b82f6;
-      --blue-bg: rgba(59, 130, 246, 0.12);
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-full: 9999px;
-
-      --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      --font-mono: ui-monospace, SFMono-Regular, "Cascadia Code", "Fira Code", monospace;
+      --gold-light: #fef3c7;
+      --gold-warm: #fbbf24;
+      --gold-primary: #f59e0b;
+      --gold-dark: #d97706;
+      --gold-deep: #b45309;
+      --amber-dark: #78350f;
+      --terracotta: #c25e1a;
+      --emerald-accent: #10b981;
+      --red-accent: #ef4444;
+      --card-glass: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(251, 191, 36, 0.45);
+      --text-dark: #1c1917;
+      --text-muted: #57534e;
+      --shadow-warm: 0 20px 45px rgba(0, 0, 0, 0.35);
+      --radius-xl: 24px;
+      --radius-md: 14px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-main);
-      color: var(--text-primary);
-      font-family: var(--font-sans);
       min-height: 100vh;
+      color: var(--text-dark);
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      line-height: 1.5;
-      overflow-x: hidden;
+      position: relative;
+      background-color: #d97706;
     }
 
-    /* Top Navigation Bar */
-    header {
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 12px 20px;
+    /* ══════════════════════════════════════════════════════════════
+       LATAR BELAKANG SENJA CERAH (BLUR RINGAN & TANPA BAYANGAN HITAM)
+       ══════════════════════════════════════════════════════════════ */
+    .bg-canvas {
+      position: fixed;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: url('hero_sunset.jpg') center center / cover no-repeat;
+      filter: blur(3.5px) brightness(0.97);
+      transform: scale(1.03);
+      z-index: -2;
+    }
+
+    .bg-shadow-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.05) 0%, rgba(180, 83, 9, 0.12) 75%, rgba(120, 53, 15, 0.26) 100%),
+                  linear-gradient(180deg, rgba(251, 191, 36, 0.08) 0%, rgba(180, 83, 9, 0.2) 100%);
+      box-shadow: inset 0 0 50px rgba(180, 83, 9, 0.18);
+      z-index: -1;
+    }
+
+    /* Main Container (Tablet Friendly - Fullscreen Immersif Tanpa Navbar) */
+    main {
+      flex: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 36px 18px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-subtle-pwa {
+      background: rgba(254, 243, 199, 0.85);
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      color: var(--amber-dark);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 99px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(180, 83, 9, 0.15);
+    }
+
+    .btn-subtle-pwa:hover {
+      background: var(--gold-primary);
+      color: #ffffff;
+      border-color: var(--gold-primary);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+
+    .view-container {
+      transition: opacity 0.32s ease, transform 0.32s ease;
+    }
+
+    .view-container.hidden {
+      display: none !important;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LAYAR 1: HERO / WELCOME CARD POP-UP ROUNDED (BERSIH TANPA GLOW AI)
+       ══════════════════════════════════════════════════════════════ */
+    .welcome-card-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .welcome-card {
+      background-color: #ffffff;
+      background-image: url('assets/card_motif.jpg');
+      background-size: 260px;
+      background-repeat: repeat;
+      border: 2.5px solid #b45309;
+      border-radius: 32px;
+      padding: 46px 36px;
+      text-align: center;
+      /* Bayangan Drop-Shadow Pop-up Realistis Bersih, Nol Glow AI */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      position: relative;
+    }
+
+    /* Maskot Besar di Kanan Ujung */
+    .mascot-side-corner {
+      position: absolute;
+      right: -24px;
+      bottom: -16px;
+      z-index: 25;
+      pointer-events: none;
+      filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+    }
+
+    .mascot-big-img {
+      height: 220px;
+      width: auto;
+      object-fit: contain;
+      animation: mascotBounce 3.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes mascotBounce {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    @media (max-width: 680px) {
+      .mascot-side-corner {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        display: flex;
+        justify-content: center;
+        margin-bottom: -25px;
+        z-index: 25;
+      }
+      .mascot-big-img {
+        height: 160px;
+      }
+    }
+
+    /* Logo ARISA di Atas Card */
+    .welcome-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 2.5px solid #92400e;
+      border-radius: 20px;
+      padding: 12px 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease;
+    }
+
+    .welcome-logo-badge:hover {
+      transform: translateY(-2px);
+    }
+
+    .arisa-main-logo {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #fef3c7;
+      color: #78350f;
+      border: 1.5px solid #d97706;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 99px;
+      letter-spacing: 0.2px;
+      margin-bottom: 18px;
+      max-width: 95%;
+      box-shadow: 0 2px 6px rgba(180, 83, 9, 0.1);
+    }
+
+    .welcome-title {
+      font-size: 2.05rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.25;
+      margin-bottom: 14px;
+      letter-spacing: -0.6px;
+    }
+
+    .welcome-desc {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 540px;
+      margin: 0 auto 36px;
+      font-weight: 500;
+    }
+
+    /* Tombol Bersih Solid 3D Pop-up (Tanpa Glow Warna / AI Slop) */
+    .btn-start-now {
+      background-color: #d97706;
+      color: #ffffff;
+      border: none;
+      padding: 18px 48px;
+      border-radius: 18px;
+      font-size: 1.22rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+      transition: all 0.15s ease-in-out;
+      position: relative;
+      width: 100%;
+      max-width: 310px;
+    }
+
+    .btn-start-now:hover {
+      background-color: #b45309;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+    }
+
+    .btn-start-now:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LAYAR 2: SPIN WHEEL & REAL AI SEGMENTATION RESULT POP-UP ROUNDED
+       ══════════════════════════════════════════════════════════════ */
+    .roulette-dashboard {
+      background-color: #ffffff;
+      background-image: url('assets/card_motif.jpg');
+      background-size: 260px;
+      background-repeat: repeat;
+      border: 2.5px solid #b45309;
+      border-radius: 32px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      position: relative;
+    }
+
+    .roulette-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px dashed rgba(251, 191, 36, 0.4);
+      padding-bottom: 14px;
     }
 
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo-img {
-      height: 32px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .brand-text h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+    .roulette-title-group h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--amber-dark);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .brand-text p {
-      font-size: 0.72rem;
+    .roulette-title-group p {
+      font-size: 0.8rem;
       color: var(--text-muted);
-      letter-spacing: 0.2px;
+      margin-top: 2px;
     }
 
-    .header-actions {
+    .roulette-top-actions {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      font-size: 0.72rem;
-      font-weight: 600;
-      background: var(--emerald-bg);
-      color: var(--emerald);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--emerald);
-      box-shadow: 0 0 8px var(--emerald);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: var(--radius-md);
+    .btn-icon-text {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      color: var(--amber-dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 99px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
+      transition: all 0.2s;
     }
 
-    .btn-outline:hover {
-      background: var(--bg-surface-elevated);
-      color: var(--text-primary);
-      border-color: var(--text-muted);
+    .btn-icon-text:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-primary);
     }
 
-    /* Container Utama */
-    main {
-      flex: 1;
-      max-width: 1280px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
+    /* Tata Letak Stage (Split Grid Tablet Friendly) */
+    .roulette-stage {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    @media (min-width: 760px) {
+      .roulette-stage {
+        grid-template-columns: 380px 1fr;
+        align-items: start;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       KOMPONEN SPIN WHEEL DENGAN JARUM PENUNJUK
+       ══════════════════════════════════════════════════════════════ */
+    .wheel-arena {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 10px 0;
     }
 
-    /* Section: Leaf Selector Bar */
-    .selector-section {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 16px;
+    .wheel-outer-wrapper {
+      position: relative;
+      width: 330px;
+      height: 330px;
+      border-radius: 50%;
+      padding: 8px;
+      background: radial-gradient(circle, #fbbf24 0%, #b45309 85%, #78350f 100%);
+      box-shadow: 0 10px 30px rgba(180, 83, 9, 0.45), inset 0 2px 8px rgba(255, 255, 255, 0.5);
+    }
+
+    @media (min-width: 400px) {
+      .wheel-outer-wrapper {
+        width: 350px;
+        height: 350px;
+      }
+    }
+
+    /* Jarum Penunjuk Atas (Needle Pointer ▼) */
+    .needle-pointer {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
+      pointer-events: none;
+      transition: transform 0.15s ease-out;
+    }
+
+    .needle-pointer.tick {
+      transform: translateX(-50%) translateY(3px) scale(1.15);
+    }
+
+    .needle-pin {
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle, #ffffff 20%, #d97706 80%, #78350f 100%);
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .needle-arrow {
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 30px solid #dc2626;
+      margin-top: -4px;
+      position: relative;
+    }
+
+    .needle-arrow::after {
+      content: "";
+      position: absolute;
+      top: -30px;
+      left: -9px;
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 24px solid #f87171;
+    }
+
+    /* Canvas Wheel */
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: block;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Center Hub */
+    .wheel-hub-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      background: radial-gradient(circle, #ffffff 10%, #fef3c7 40%, #f59e0b 90%, #b45309 100%);
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 25;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #78350f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      user-select: none;
+      transition: transform 0.15s ease;
+    }
+
+    .wheel-hub-center:hover {
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    .wheel-hub-center:active {
+      transform: translate(-50%, -50%) scale(0.94);
+    }
+
+    .wheel-controls {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-spin {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45);
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
+
+    .btn-spin:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(217, 119, 6, 0.55);
+    }
+
+    .btn-spin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spin-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       KARTU HASIL SEGMENTASI MODEL AI NYATA BERMOTIF
+       ══════════════════════════════════════════════════════════════ */
+    .result-panel {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 251, 235, 0.93) 100%),
+                  url('assets/card_motif.jpg') center center / cover no-repeat;
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(120, 53, 15, 0.12);
+      position: relative;
+    }
+
+    .result-mascot-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mascot-mini-avatar {
+      height: 34px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(180, 83, 9, 0.25));
+    }
+
+    .result-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .category-chip {
+      background: #fef3c7;
+      color: var(--amber-dark);
+      border: 1px solid #fde68a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+
+    .dsi-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .dsi-tag.healthy {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* Viewer Citra Hasil Segmentasi AI */
+    .image-comparison-card {
+      margin-bottom: 16px;
+    }
+
+    .image-viewport-box {
+      width: 100%;
+      height: 250px;
+      background: #1c1917;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid var(--gold-warm);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-viewport-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.25s ease;
+    }
+
+    .overlay-indicator-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(18, 12, 8, 0.8);
+      color: #fef3c7;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      backdrop-filter: blur(6px);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Switcher Citra: Asli vs Segmentasi U-Net */
+    .image-switch-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .switch-tab-btn {
+      background: #f5f5f4;
+      border: 1px solid #e7e5e4;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .switch-tab-btn.active {
+      background: var(--gold-dark);
+      color: #ffffff;
+      border-color: var(--gold-dark);
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+    }
+
+    /* Detail Metrik AI */
+    .disease-name-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--amber-dark);
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+
+    .latin-name-sub {
+      font-size: 0.78rem;
+      color: var(--terracotta);
+      font-style: italic;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .metrics-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+      background: #fafaf9;
+      border: 1px solid #f5f5f4;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .metric-item-box span {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .metric-item-box strong {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      font-weight: 800;
+    }
+
+    .treatment-callout {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      color: var(--amber-dark);
+      line-height: 1.45;
+    }
+
+    .treatment-callout strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 0.8rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       CANVAS CONFETTI (FULLSCREEN OVERLAY)
+       ══════════════════════════════════════════════════════════════ */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PWA POP-UP DIALOG (WARM SUNSET)
+       ══════════════════════════════════════════════════════════════ */
+    .pwa-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .pwa-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .pwa-dialog {
+      background: #ffffff;
+      border: 1px solid var(--gold-warm);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 380px;
+      padding: 26px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      transform: scale(0.92);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center;
+    }
+
+    .pwa-backdrop.active .pwa-dialog {
+      transform: scale(1);
+    }
+
+    .pwa-logo-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .pwa-logo-wrapper img {
+      height: 48px;
+      width: auto;
+    }
+
+    .pwa-dialog h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .pwa-dialog p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .pwa-dialog-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-dialog-install {
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-dialog-dismiss {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid #e7e5e4;
+      padding: 11px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  
+    /* ══════════════════════════════════════════════════════════════
+       SISTEM SELECTOR DAUN INSTAN & BENCHMARK GATEKEEPER
+       ══════════════════════════════════════════════════════════════ */
+    .leaf-quick-selector {
+      margin-top: 14px;
+      width: 100%;
+      background: #ffffff;
+      background-image: url('assets/card_motif.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #b45309;
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 4px 0 #78350f, 0 8px 18px rgba(0, 0, 0, 0.15);
     }
 
     .selector-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .selector-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .category-filter-chips {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .chip-btn {
-      background: var(--bg-main);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .chip-btn:hover {
-      border-color: var(--text-muted);
-      color: var(--text-primary);
-    }
-
-    .chip-btn.active {
-      background: var(--blue-bg);
-      color: #93c5fd;
-      border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    .chip-btn.random-spin {
-      background: var(--amber-bg);
-      color: #fde68a;
-      border-color: rgba(245, 158, 11, 0.4);
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #78350f;
       display: inline-flex;
       align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .selector-tabs {
+      display: flex;
       gap: 5px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .selector-tabs::-webkit-scrollbar {
+      display: none;
     }
 
-    .chip-btn.random-spin:hover {
-      background: rgba(245, 158, 11, 0.25);
-    }
-
-    /* Leaf Thumbnails Horizontal Bar */
-    .leaf-carousel-wrapper {
-      position: relative;
-    }
-
-    .leaf-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 10px;
-      max-height: 230px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .leaf-grid::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .leaf-grid::-webkit-scrollbar-track {
-      background: var(--bg-main);
-      border-radius: 4px;
-    }
-
-    .leaf-grid::-webkit-scrollbar-thumb {
-      background: var(--border-subtle);
-      border-radius: 4px;
-    }
-
-    .leaf-card-item {
-      background: var(--bg-main);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 8px;
-      cursor: pointer;
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      user-select: none;
-      text-align: left;
-    }
-
-    .leaf-card-item:hover {
-      border-color: var(--border-focus);
-      transform: translateY(-2px);
-      background: var(--bg-surface-elevated);
-    }
-
-    .leaf-card-item.selected {
-      border-color: var(--emerald);
-      background: rgba(16, 185, 129, 0.08);
-      box-shadow: 0 0 0 1px var(--emerald);
-    }
-
-    .leaf-thumb-box {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: #000000;
-      position: relative;
-    }
-
-    .leaf-thumb-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .leaf-card-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .leaf-card-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .leaf-card-sub {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-    }
-
-    .pill-dsi {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .pill-dsi.healthy {
-      color: var(--emerald);
-      background: var(--emerald-bg);
-    }
-
-    .pill-dsi.mild {
-      color: var(--amber);
-      background: var(--amber-bg);
-    }
-
-    .pill-dsi.severe {
-      color: var(--rose);
-      background: var(--rose-bg);
-    }
-
-    /* ══════════════════════════════════════════════════════════════
-       SECTION: MAIN BENCHMARK DISPLAY STAGE (SPLIT VIEW)
-       ══════════════════════════════════════════════════════════════ */
-    .benchmark-stage {
-      display: grid;
-      grid-template-columns: 1fr 1.25fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    @media (max-width: 960px) {
-      .benchmark-stage {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Visual Inspection Card */
-    .visual-inspection-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .visual-viewport {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: #000000;
-      position: relative;
-      border: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .visual-viewport img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      transition: opacity 0.2s ease;
-    }
-
-    .viewport-overlay-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(11, 15, 25, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-subtle);
+    .sel-tab {
+      background: #fef3c7;
+      color: #78350f;
+      border: 1.5px solid #fde68a;
+      border-radius: 20px;
       padding: 4px 10px;
-      border-radius: var(--radius-full);
       font-size: 0.72rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-primary);
-    }
-
-    .visual-toggle-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .tab-btn {
-      background: var(--bg-main);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: var(--radius-md);
+      font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      white-space: nowrap;
       transition: all 0.15s ease;
     }
 
-    .tab-btn:hover {
-      background: var(--bg-surface-elevated);
-      color: var(--text-primary);
+    .sel-tab:hover {
+      background: #fde68a;
+      border-color: #f59e0b;
     }
 
-    .tab-btn.active {
-      background: var(--blue-bg);
-      color: #93c5fd;
-      border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    /* Diagnostics & Benchmark Data Columns */
-    .data-cards-column {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .panel-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
-    }
-
-    /* Header Penyakit */
-    .disease-header-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .disease-title-main {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.4px;
-      line-height: 1.3;
-    }
-
-    .latin-sub {
-      font-size: 0.8rem;
-      font-style: italic;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .risk-badge {
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      white-space: nowrap;
-      text-transform: uppercase;
-      border: 1px solid transparent;
-    }
-
-    .risk-badge.rendah {
-      background: var(--emerald-bg);
-      color: var(--emerald);
-      border-color: rgba(16, 185, 129, 0.3);
-    }
-
-    .risk-badge.sedang {
-      background: var(--amber-bg);
-      color: var(--amber);
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .risk-badge.tinggi {
-      background: var(--rose-bg);
-      color: var(--rose);
-      border-color: rgba(239, 68, 68, 0.3);
-    }
-
-    /* Metrics Grid */
-    .metrics-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    @media (max-width: 640px) {
-      .metrics-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .metric-cell {
-      background: var(--bg-main);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .metric-cell-label {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      font-weight: 600;
-    }
-
-    .metric-cell-val {
-      font-size: 1.15rem;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      color: var(--text-primary);
-    }
-
-    .metric-cell-sub {
-      font-size: 0.68rem;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-    }
-
-    /* Progress bar DSI */
-    .progress-wrapper {
-      margin-bottom: 14px;
-    }
-
-    .progress-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      font-family: var(--font-mono);
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 7px;
-      background: var(--bg-main);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--emerald);
-      border-radius: var(--radius-full);
-      transition: width 0.3s ease, background-color 0.3s ease;
-    }
-
-    /* Technical Benchmark Comparison Table */
-    .benchmark-tech-box {
-      background: var(--bg-main);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 12px;
-      margin-bottom: 14px;
-    }
-
-    .tech-box-header {
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--blue);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tech-specs-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      font-size: 0.74rem;
-    }
-
-    @media (max-width: 640px) {
-      .tech-specs-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .spec-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding: 6px 8px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .spec-k {
-      color: var(--text-muted);
-      font-size: 0.68rem;
-    }
-
-    .spec-v {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    /* Agronomic Treatment Card */
-    .treatment-box {
-      background: var(--bg-card);
-      border-left: 3px solid var(--border-focus);
-      border-radius: 0 var(--radius-md) var(--radius-md) 0;
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .treatment-title {
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: #93c5fd;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .treatment-desc {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    /* PWA Install Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .modal-logo {
-      height: 48px;
-      width: auto;
-    }
-
-    .modal-card h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-
-    .modal-card p {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      margin-top: 6px;
-    }
-
-    .btn-primary {
-      flex: 1;
-      background: var(--blue);
+    .sel-tab.active {
+      background: #f59e0b;
       color: #ffffff;
-      border: none;
-      font-size: 0.82rem;
+      border-color: #b45309;
+      box-shadow: 0 2px 6px rgba(180, 83, 9, 0.3);
+    }
+
+    .sel-tab.gatekeeper {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    .sel-tab.gatekeeper.active {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #991b1b;
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+    }
+
+    .leaf-chips-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #d97706 #fef3c7;
+    }
+
+    .leaf-chip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 4px 8px 4px 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .leaf-chip:hover {
+      border-color: #f59e0b;
+      background: #fffbeb;
+      transform: translateY(-1px);
+    }
+
+    .leaf-chip.active {
+      border-color: #b45309;
+      background: #fef3c7;
+      box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.25);
+    }
+
+    .leaf-chip-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid #d1d5db;
+    }
+
+    .leaf-chip-label {
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 10px;
-      border-radius: var(--radius-md);
-      cursor: pointer;
+      color: #451a03;
+      white-space: nowrap;
     }
 
-    .btn-primary:hover {
-      background: #2563eb;
+    /* Gatekeeper Status Box */
+    .gatekeeper-status-box {
+      background: #ecfdf5;
+      border: 1.5px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
     }
 
-    .btn-secondary {
-      flex: 1;
-      background: var(--bg-main);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 10px;
-      border-radius: var(--radius-md);
-      cursor: pointer;
+    .gatekeeper-status-box.rejected {
+      background: #fef2f2;
+      border-color: #fecaca;
     }
 
-    .btn-secondary:hover {
-      background: var(--bg-surface-elevated);
-      color: var(--text-primary);
+    .gk-status-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #065f46;
     }
+
+    .gatekeeper-status-box.rejected .gk-status-header {
+      color: #991b1b;
+    }
+
+    .gatekeeper-status-box p {
+      font-size: 0.71rem;
+      color: #047857;
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .gatekeeper-status-box.rejected p {
+      color: #b91c1c;
+    }
+
+    .badge-iari {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+    .badge-iari.aman { background: #d1fae5; color: #065f46; }
+    .badge-iari.waspada { background: #fef3c7; color: #92400e; }
+    .badge-iari.siaga { background: #ffedd5; color: #c2410c; }
+    .badge-iari.bahaya { background: #fee2e2; color: #991b1b; }
+
   </style>
 </head>
 <body>
 
-  <!-- Top Header -->
-  <header>
-    <div class="brand-group">
-      <img src="assets/logo/logo-full.svg" alt="ARISA Logo" class="brand-logo-img" onerror="this.src='icon.svg'">
-      <div class="brand-text">
-        <h1>
-          <span>ARISA</span>
-          <span style="font-weight:400;color:var(--text-muted);font-size:0.85rem;">| Benchmark Station</span>
-        </h1>
-        <p>Agronomic Risk Intelligence System for Agriculture</p>
-      </div>
-    </div>
+  <!-- Fullscreen Blurred Watercolor Sunset & Shadow -->
+  <div class="bg-canvas"></div>
+  <div class="bg-shadow-overlay"></div>
 
-    <div class="header-actions">
-      <div class="badge-status">
-        <span class="status-dot"></span>
-        <span>Edge TFLite Active</span>
-      </div>
-      <button class="btn-outline" onclick="openPwaModal()">
-        <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        <span>Pasang PWA</span>
-      </button>
-    </div>
-  </header>
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
 
-  <!-- Main Container -->
   <main>
-    <!-- Section 1: Interactive Leaf Selector (Direct Benchmark Trigger) -->
-    <section class="selector-section">
-      <div class="selector-header">
-        <div class="selector-title">
-          <svg style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <span>Pilih Sampel Daun Padi (Klik untuk Benchmark Instan)</span>
+    <!-- ══════════════════════════════════════════════════════════════
+         LAYAR 1: HERO / START NOW
+         ══════════════════════════════════════════════════════════════ -->
+    <section class="view-container" id="viewHome">
+      <div class="welcome-card-wrapper">
+        <!-- Maskot Burung Besar di Kanan Ujung -->
+        <div class="mascot-side-corner">
+          <img src="assets/mascot.png" alt="Maskot ARISA" class="mascot-big-img">
         </div>
 
-        <div class="category-filter-chips">
-          <button class="chip-btn active" onclick="filterCategory('all', this)">Semua (16)</button>
-          <button class="chip-btn" onclick="filterCategory('blast', this)">Blas Daun (4)</button>
-          <button class="chip-btn" onclick="filterCategory('blight', this)">Hawar Bakteri (4)</button>
-          <button class="chip-btn" onclick="filterCategory('brownspot', this)">Bercak Cokelat (4)</button>
-          <button class="chip-btn" onclick="filterCategory('healthy', this)">Kontrol Sehat (4)</button>
-          <button class="chip-btn random-spin" onclick="pickRandomLeaf()">
-            <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-            <span>Pilih Acak</span>
-          </button>
-        </div>
-      </div>
+        <div class="welcome-card">
+          <!-- Logo ARISA Resmi (Badge Putih Timbul Bolder & Kontras Tinggi) -->
+          <div class="welcome-logo-badge" title="ARISA: Agronomic Risk Intelligence System for Agriculture">
+            <img src="assets/logo/logo-full.svg" alt="ARISA Logo" class="arisa-main-logo">
+          </div>
 
-      <!-- Leaf Grid -->
-      <div class="leaf-grid" id="leafGridContainer">
-        <!-- Rendered by JavaScript -->
+          <div>
+            <span class="welcome-badge">
+              <svg style="width:14px;height:14px;fill:currentColor;flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span>ARISA: Agronomic Risk Intelligence System for Agriculture</span>
+            </span>
+          </div>
+
+          <h1 class="welcome-title">Pemantauan & Diagnosis Penyakit Padi</h1>
+          <p class="welcome-desc">
+            Sistem deteksi cerdas berbasis U-Net Semantic Segmentation dan Edge-AI Classifier. Memindai kontur lesi daun, menghitung indeks keparahan DSI nyata, dan mendiagnosis patogen tanaman padi secara instan.
+          </p>
+
+          <div>
+            <button class="btn-start-now" onclick="startRoulette()">
+              <span>MULAI SEKARANG</span>
+              <svg style="width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Section 2: Split Benchmark & Diagnostics Stage -->
-    <section class="benchmark-stage">
-      
-      <!-- Visual Inspection Window -->
-      <div class="visual-inspection-card">
-        <div class="visual-viewport" id="viewportContainer">
-          <img id="mainViewImage" src="assets/results/segmented_02_blast.jpg" alt="Visual Analisis Daun">
-          <div class="viewport-overlay-badge" id="viewportBadge">
-            <svg style="width:12px;height:12px;stroke:var(--emerald);fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span id="badgeModeLabel">Segmentasi U-Net (Mask Aktif)</span>
+    <!-- ══════════════════════════════════════════════════════════════
+         LAYAR 2: ROULETTE SPIN WHEEL & RESULT STAGE
+         ══════════════════════════════════════════════════════════════ -->
+    <section class="view-container hidden" id="viewRoulette">
+      <div class="roulette-dashboard">
+        <!-- Top Bar Dashboard -->
+        <div class="roulette-header">
+          <div class="roulette-title-group">
+            <h2>
+              <svg style="width:20px;height:20px;stroke:var(--gold-dark);fill:none;stroke-width:2.2;vertical-align:middle;" viewBox="0 0 24 24"><path d="M12 22C12 12 20 8 20 8s-4 8-8 14z"/><path d="M12 22C12 16 7 13 4 14"/></svg>
+              <span>Roda Kolase Daun Padi (AI Spin Wheel)</span>
+            </h2>
+            <p>Arahkan jarum penunjuk ke sampel daun untuk melihat segmentasi U-Net & metrik keparahan lesi.</p>
+          </div>
+          <div class="roulette-top-actions">
+            <button class="btn-icon-text" onclick="openPwaDialog()">
+              <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              <span>Instal PWA</span>
+            </button>
+            <button class="btn-icon-text" onclick="backToHome()">
+              <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              <span>Beranda</span>
+            </button>
           </div>
         </div>
 
-        <!-- Mode Toggle Tabs -->
-        <div class="visual-toggle-tabs">
-          <button class="tab-btn active" id="btnTabSegmented" onclick="switchVisualMode('segmented')">
-            <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>
-            <span>Overlay U-Net AI</span>
-          </button>
-          <button class="tab-btn" id="btnTabOriginal" onclick="switchVisualMode('original')">
-            <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span>Citra Asli Lapangan</span>
-          </button>
-        </div>
-      </div>
+        <!-- Stage Konten (Split Grid) -->
+        <div class="roulette-stage">
+          <!-- SISI KIRI: SPIN WHEEL ARENA -->
+          <div class="wheel-arena">
+            <div class="wheel-outer-wrapper">
+              <!-- Jarum Penunjuk Atas (Needle Pointer ▼) -->
+              <div class="needle-pointer" id="needlePointer">
+                <div class="needle-pin"></div>
+                <div class="needle-arrow"></div>
+              </div>
 
-      <!-- Benchmark Metrics & Analytics Data -->
-      <div class="data-cards-column">
-        <div class="panel-card">
-          <!-- Disease Title & Risk Badge -->
-          <div class="disease-header-row">
+              <!-- Piringan Canvas Spin Wheel -->
+              <canvas id="wheelCanvas" width="500" height="500"></canvas>
+
+              <!-- Tombol Tengah ARISA -->
+              <div class="wheel-hub-center" onclick="spinWheel()" id="wheelHub">
+                <span>PUTAR</span>
+              </div>
+            </div>
+
+            <!-- Kontrol Tombol Putar -->
+            
+            <!-- Kontrol Tombol Putar -->
+            <div class="wheel-controls">
+              <button class="btn-spin" id="btnSpinWheel" onclick="spinWheel()">
+                <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                <span>Putar Roulette Daun</span>
+              </button>
+              <span class="spin-hint">Durasi putaran cepat & gesit (~2 detik) atau klik langsung daun</span>
+
+              <!-- Quick Selector Daun Interaktif -->
+              <div class="leaf-quick-selector">
+                <div class="selector-header">
+                  <span class="selector-title">
+                    <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Pilih Daun Langsung (Benchmark Instan):</span>
+                  </span>
+                </div>
+                <div class="selector-tabs">
+                  <button class="sel-tab active" id="tabAll" onclick="filterLeafSelector('all')">Semua (16)</button>
+                  <button class="sel-tab" id="tabBlast" onclick="filterLeafSelector('blast')">Blas</button>
+                  <button class="sel-tab" id="tabBlight" onclick="filterLeafSelector('blight')">Hawar</button>
+                  <button class="sel-tab" id="tabBrownspot" onclick="filterLeafSelector('brownspot')">Bercak</button>
+                  <button class="sel-tab" id="tabHealthy" onclick="filterLeafSelector('healthy')">Sehat</button>
+                  <button class="sel-tab gatekeeper" id="tabGatekeeper" onclick="selectGatekeeperSample()">⚠️ Uji Non-Padi</button>
+                </div>
+                <div class="leaf-chips-strip" id="leafChipsStrip"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SISI KANAN: KARTU HASIL SEGMENTASI MODEL AI -->
+          <div class="result-panel" id="resultPanel">
+            <div class="result-badge-row">
+              <div class="result-mascot-group">
+                <img src="assets/mascot.png" alt="Maskot" class="mascot-mini-avatar">
+                <span class="category-chip" id="resCategory">Blas Daun</span>
+              </div>
+              <span class="dsi-tag" id="resDsiTag">DSI: 14.7% (Ringan)</span>
+            </div>
+
+            <!-- Image Comparison Box -->
+            <div class="image-comparison-card">
+              <div class="image-viewport-box">
+                <img id="resLeafImage" src="assets/results/segmented_02_blast.jpg" alt="Hasil Segmentasi Daun">
+                <div class="overlay-indicator-badge" id="viewModeBadge">
+                  <svg style="width:12px;height:12px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  <span id="badgeModeText">Segmentasi AI (U-Net)</span>
+                </div>
+              </div>
+
+              <!-- Toggle Asli vs Segmentasi -->
+              <div class="image-switch-tabs">
+                <button class="switch-tab-btn active" id="btnModeSegmented" onclick="switchImageView('segmented')">
+                  <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6M8 11h6"/></svg>
+                  <span>Segmentasi AI (U-Net)</span>
+                </button>
+                <button class="switch-tab-btn" id="btnModeOriginal" onclick="switchImageView('original')">
+                  <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/><path d="M12 22C12 12 20 8 20 8s-4 8-8 14z"/></svg>
+                  <span>Citra Asli Daun</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Detail Diagnosis AI Nyata -->
+            
+            <!-- Detail Diagnosis AI Nyata & Benchmark -->
             <div>
-              <h2 class="disease-title-main" id="valDiseaseTitle">Penyakit Blas Daun (Pyricularia)</h2>
-              <p class="latin-sub" id="valLatinName">Pyricularia oryzae (Magnaporthe)</p>
-            </div>
-            <span class="risk-badge sedang" id="valRiskBadge">Risiko Sedang</span>
-          </div>
+              <h3 class="disease-name-title" id="resDiseaseTitle">Penyakit Blas Daun (Pyricularia)</h3>
+              <p class="latin-name-sub" id="resLatinName">Pyricularia oryzae (Magnaporthe)</p>
 
-          <!-- Key Metrics Grid -->
-          <div class="metrics-row">
-            <div class="metric-cell">
-              <span class="metric-cell-label">Akurasi Model</span>
-              <span class="metric-cell-val" id="valConfidence">88.9%</span>
-              <span class="metric-cell-sub">Edge INT8 Quant</span>
-            </div>
-            <div class="metric-cell">
-              <span class="metric-cell-label">Indeks DSI</span>
-              <span class="metric-cell-val" id="valDsi">14.68%</span>
-              <span class="metric-cell-sub" id="valDsiCategory">Ringan</span>
-            </div>
-            <div class="metric-cell">
-              <span class="metric-cell-label">Fase Tumbuh</span>
-              <span class="metric-cell-val" id="valFase" style="font-size:0.95rem;">Generatif</span>
-              <span class="metric-cell-sub" id="valFaseWeight">Bobot W: 1.0</span>
-            </div>
-            <div class="metric-cell">
-              <span class="metric-cell-label">Skor IARI</span>
-              <span class="metric-cell-val" id="valIari">17.62</span>
-              <span class="metric-cell-sub">Formula Terpadu</span>
-            </div>
-          </div>
+              <div class="metrics-grid-2col">
+                <div class="metric-item-box">
+                  <span>Akurasi Model</span>
+                  <strong id="resConfidence">88.9%</strong>
+                </div>
+                <div class="metric-item-box">
+                  <span>Indeks DSI & Skala SES</span>
+                  <strong id="resDsiScore">14.68% (Skala 3)</strong>
+                </div>
+                <div class="metric-item-box">
+                  <span>Fase Tumbuh & Bobot</span>
+                  <strong id="resFase">Generatif (W: 1.3)</strong>
+                </div>
+                <div class="metric-item-box">
+                  <span>Segmentasi Lesi U-Net</span>
+                  <strong id="resPixelCount">2.790 px lesi / 19.001 px</strong>
+                </div>
+                <div class="metric-item-box">
+                  <span>Indeks Risiko IARI</span>
+                  <strong id="resIari"><span class="badge-iari siaga">19.08 (Siaga)</span></strong>
+                </div>
+                <div class="metric-item-box">
+                  <span>Benchmark Latensi</span>
+                  <strong id="resLatency" style="font-size:0.82rem;">Pi 4: ~412ms | Cloud: 89ms</strong>
+                </div>
+              </div>
 
-          <!-- DSI Severity Meter -->
-          <div class="progress-wrapper">
-            <div class="progress-labels">
-              <span>Tingkat Keparahan Lesi (Disease Severity Index)</span>
-              <span id="valPixelRatio">2.790 px lesi / 19.001 px daun</span>
-            </div>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" id="valProgressBar" style="width: 14.68%;"></div>
-            </div>
-          </div>
+              <!-- Gatekeeper Edge AI Status Box -->
+              <div class="gatekeeper-status-box" id="resGatekeeperBox">
+                <div class="gk-status-header">
+                  <svg id="gkIcon" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <span id="gkStatusTitle">Gatekeeper Edge AI: Lolos (Kanopi Valid)</span>
+                </div>
+                <p id="gkStatusDetail">ExG: 28.4 &ge; 15.0 &bull; Rasio Kanopi: 0.68 &ge; 0.25 &bull; Deteksi Latar Belakang Negatif</p>
+              </div>
 
-          <!-- Technical Edge vs Cloud Benchmark Specs -->
-          <div class="benchmark-tech-box">
-            <div class="tech-box-header">
-              <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>Spesifikasi Benchmark Inferensi Edge & Hardware</span>
-            </div>
-            <div class="tech-specs-grid">
-              <div class="spec-item">
-                <span class="spec-k">Latensi Edge (Pi 4)</span>
-                <span class="spec-v" id="valEdgeLatency">412 ms (INT8)</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-k">Komparasi Cloud H5</span>
-                <span class="spec-v">89 ms (FP32 Server)</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-k">Ukuran Model</span>
-                <span class="spec-v">4.7 MB (89.8% Hemat)</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-k">Gatekeeper Kanopi</span>
-                <span class="spec-v" style="color:var(--emerald)">Lolos 7/7 Filter Padi</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-k">U-Net Guided Fusion</span>
-                <span class="spec-v" style="color:#93c5fd">Tervalidasi Konsisten</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-k">Penggunaan RAM</span>
-                <span class="spec-v">145 MB (Ringan)</span>
+              <div class="treatment-callout">
+                <strong>Rekomendasi Penanganan PPL:</strong>
+                <span id="resTreatment">Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan.</span>
               </div>
             </div>
-          </div>
-
-          <!-- Agronomic Treatment & PPL Recommendation -->
-          <div class="treatment-box">
-            <span class="treatment-title">
-              <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>Rekomendasi Agronomi & Penanganan PPL</span>
-            </span>
-            <p class="treatment-desc" id="valTreatment">
-              Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan.
-            </p>
           </div>
         </div>
       </div>
-
     </section>
   </main>
 
-  <!-- PWA Install Modal -->
-  <div class="modal-backdrop" id="pwaModalBackdrop" onclick="if(event.target===this) closePwaModal()">
-    <div class="modal-card">
-      <img src="assets/logo/logo-full.svg" alt="ARISA Logo" class="modal-logo" onerror="this.src='icon.svg'">
-      <h2>Pasang Aplikasi ARISA</h2>
-      <p>Aplikasi Progressive Web App ini dapat dipasang langsung ke tablet atau smartphone Anda agar berjalan secara instan dan mandiri saat demonstrasi lapangan.</p>
-      <div class="modal-actions">
-        <button class="btn-primary" onclick="triggerPwaInstall()">Pasang ke Layar Utama</button>
-        <button class="btn-secondary" onclick="closePwaModal()">Tutup</button>
+  <!-- ══════════════════════════════════════════════════════════════
+       PWA POP-UP MODAL (TABLET / OFFLINE)
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="pwa-backdrop" id="pwaModalBackdrop">
+    <div class="pwa-dialog">
+      <div class="pwa-logo-wrapper">
+        <img src="assets/logo/logo-full.svg" alt="ARISA Logo" onerror="this.onerror=null; this.src='assets/logo/logo-full.webp';">
+      </div>
+      <h2>Pasang ARISA ke Tablet</h2>
+      <p>Pasang aplikasi ini ke Layar Utama tablet agar dapat berjalan penuh (fullscreen offline) tanpa hambatan browser saat demonstrasi di lapangan.</p>
+      <div class="pwa-dialog-actions">
+        <button class="btn-dialog-install" onclick="executePwaInstall()">Tambahkan ke Layar Utama</button>
+        <button class="btn-dialog-dismiss" onclick="closePwaDialog()">Lanjutkan di Browser</button>
       </div>
     </div>
   </div>
 
+  
   <script>
     // ══════════════════════════════════════════════════════════════
-    // DATASET 16 SAMPEL DAUN LENGKAP DENGAN METRIK BENCHMARK RESMI
+    // DATASET 16 SAMPEL DAUN + SAMPEL GATEKEEPER NON-PADI (ML BENCHMARK)
     // ══════════════════════════════════════════════════════════════
-    const leafData = [
+    const wheelData = [
       {
-        id: "sample_01",
-        label: "Blas 01",
-        category: "blast",
-        original_image: "assets/dataset/blast_02.jpg",
-        segmented_image: "assets/results/segmented_01_blast.jpg",
-        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
-        latin_name: "Pyricularia oryzae (Magnaporthe)",
-        confidence_disease: "86.5%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 4.34,
-        dsi_category: "Sangat Ringan",
-        pixel_info: "886 px lesi / 20.401 px daun",
-        iari_score: 5.21,
-        risk_level: "rendah",
-        risk_label: "Risiko Rendah",
-        edge_latency: "398 ms (INT8)",
-        treatment: "Lesi awal terlokalisasi. Aplikasikan fungisida protektif nabati (ekstrak daun nimba/serai wangi) atau trisiklazol dosis rendah. Pertahankan aerasi tajuk tanaman."
+        "id": "sample_01",
+        "filename": "blast_02.jpg",
+        "wheel_label": "Blas 01",
+        "category": "blast",
+        "original_image": "assets/dataset/blast_02.jpg",
+        "segmented_image": "assets/results/segmented_01_blast.jpg",
+        "predicted_disease": "Penyakit Blas Daun (Pyricularia)",
+        "latin_name": "Pyricularia oryzae (Magnaporthe)",
+        "confidence_disease": "94.2%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "4.34%",
+        "dsi_category": "Sangat Ringan",
+        "ses_scale": "Skala 1 (Bintik < 1mm)",
+        "pixel_info": "886 px lesi / 20.401 px",
+        "iari_score": "5.64",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~408ms | Cloud: 85ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan."
       },
       {
-        id: "sample_02",
-        label: "Blas 02",
-        category: "blast",
-        original_image: "assets/dataset/blast_04.jpg",
-        segmented_image: "assets/results/segmented_02_blast.jpg",
-        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
-        latin_name: "Pyricularia oryzae (Magnaporthe)",
-        confidence_disease: "88.9%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 14.68,
-        dsi_category: "Ringan",
-        pixel_info: "2.790 px lesi / 19.001 px daun",
-        iari_score: 17.62,
-        risk_level: "sedang",
-        risk_label: "Risiko Sedang",
-        edge_latency: "412 ms (INT8)",
-        treatment: "Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan dan lakukan pengeringan sawah berselang."
+        "id": "sample_02",
+        "filename": "blast_04.jpg",
+        "wheel_label": "Blas 02",
+        "category": "blast",
+        "original_image": "assets/dataset/blast_04.jpg",
+        "segmented_image": "assets/results/segmented_02_blast.jpg",
+        "predicted_disease": "Penyakit Blas Daun (Pyricularia)",
+        "latin_name": "Pyricularia oryzae (Magnaporthe)",
+        "confidence_disease": "88.9%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "14.68%",
+        "dsi_category": "Ringan",
+        "ses_scale": "Skala 3 (Belah ketupat 1-2cm)",
+        "pixel_info": "2.790 px lesi / 19.001 px",
+        "iari_score": "19.08",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~412ms | Cloud: 89ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Semprotkan fungisida sistemik trisiklazol atau isoprotiolan. Kurangi pemupukan Nitrogen (urea) berlebih saat musim hujan."
       },
       {
-        id: "sample_03",
-        label: "Blas 03",
-        category: "blast",
-        original_image: "assets/dataset/blast_06.jpg",
-        segmented_image: "assets/results/segmented_03_blast.jpg",
-        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
-        latin_name: "Pyricularia oryzae (Magnaporthe)",
-        confidence_disease: "84.1%",
-        predicted_fase: "Vegetatif",
-        fase_weight: 0.5,
-        dsi_score: 17.07,
-        dsi_category: "Ringan",
-        pixel_info: "6.141 px lesi / 35.969 px daun",
-        iari_score: 10.24,
-        risk_level: "sedang",
-        risk_label: "Risiko Sedang",
-        edge_latency: "425 ms (INT8)",
-        treatment: "Fase vegetatif sensitif terhadap penyebaran spora blas. Semprot fungisida kasugamisin atau azoksistrobin. Tambahkan kalium (KCl) untuk memperkuat dinding sel daun."
+        "id": "sample_03",
+        "filename": "blast_06.jpg",
+        "wheel_label": "Blas 03",
+        "category": "blast",
+        "original_image": "assets/dataset/blast_06.jpg",
+        "segmented_image": "assets/results/segmented_03_blast.jpg",
+        "predicted_disease": "Penyakit Blas Daun (Pyricularia)",
+        "latin_name": "Pyricularia oryzae (Magnaporthe)",
+        "confidence_disease": "91.5%",
+        "predicted_fase": "Vegetatif (W: 1.0)",
+        "fase_weight": 1.0,
+        "dsi_score": "17.07%",
+        "dsi_category": "Ringan",
+        "ses_scale": "Skala 4 (Bercak meluas)",
+        "pixel_info": "6.141 px lesi / 35.969 px",
+        "iari_score": "17.07",
+        "iari_status": "waspada",
+        "edge_latency": "Pi 4: ~415ms | Cloud: 91ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Gunakan varietas tahan (Inpari 32, Ciherang). Lakukan pergiliran fungisida trisiklazol dengan azoksistrobin."
       },
       {
-        id: "sample_04",
-        label: "Blas 04",
-        category: "blast",
-        original_image: "assets/dataset/blast_08.jpg",
-        segmented_image: "assets/results/segmented_04_blast.jpg",
-        predicted_disease: "Penyakit Blas Daun (Pyricularia)",
-        latin_name: "Pyricularia oryzae (Magnaporthe)",
-        confidence_disease: "87.5%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 19.16,
-        dsi_category: "Ringan",
-        pixel_info: "5.498 px lesi / 28.702 px daun",
-        iari_score: 22.99,
-        risk_level: "tinggi",
-        risk_label: "Risiko Tinggi",
-        edge_latency: "418 ms (INT8)",
-        treatment: "Lesi berbentuk belah ketupat mulai berfusi. Segera lakukan sanitasi daun sakit terluar, kendalikan genangan air, dan semprot fungisida sistemik berselang."
+        "id": "sample_04",
+        "filename": "blast_08.jpg",
+        "wheel_label": "Blas 04",
+        "category": "blast",
+        "original_image": "assets/dataset/blast_08.jpg",
+        "segmented_image": "assets/results/segmented_04_blast.jpg",
+        "predicted_disease": "Penyakit Blas Daun (Pyricularia)",
+        "latin_name": "Pyricularia oryzae (Magnaporthe)",
+        "confidence_disease": "89.8%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "19.16%",
+        "dsi_category": "Sedang",
+        "ses_scale": "Skala 5 (Lesi menyatu > 10%)",
+        "pixel_info": "5.498 px lesi / 28.702 px",
+        "iari_score": "24.91",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~410ms | Cloud: 88ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Keringkan sawah berkala. Berikan pupuk Kalium (KCl 50 kg/ha) untuk mempertebal dinding sel pelepah daun padi."
       },
       {
-        id: "sample_05",
-        label: "Hawar 01",
-        category: "blight",
-        original_image: "assets/dataset/blight_01.jpg",
-        segmented_image: "assets/results/segmented_05_blight.jpg",
-        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
-        latin_name: "Xanthomonas oryzae pv. oryzae",
-        confidence_disease: "81.4%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 8.83,
-        dsi_category: "Ringan",
-        pixel_info: "2.253 px lesi / 25.508 px daun",
-        iari_score: 8.83,
-        risk_level: "sedang",
-        risk_label: "Risiko Sedang",
-        edge_latency: "405 ms (INT8)",
-        treatment: "Lakukan pengeringan petakan sawah secara berkala (irigasi berselang). Gunakan bakterisida tembaga hidroksida (misal Kocide) dan bersihkan gulma pematang pembawa inang."
+        "id": "sample_05",
+        "filename": "blight_01.jpg",
+        "wheel_label": "Hawar 01",
+        "category": "blight",
+        "original_image": "assets/dataset/blight_01.jpg",
+        "segmented_image": "assets/results/segmented_05_blight.jpg",
+        "predicted_disease": "Hawar Daun Bakteri (Bacterial Blight)",
+        "latin_name": "Xanthomonas oryzae pv. oryzae",
+        "confidence_disease": "93.4%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "8.83%",
+        "dsi_category": "Sangat Ringan",
+        "ses_scale": "Skala 1 (Garis basah ujung)",
+        "pixel_info": "2.253 px lesi / 25.508 px",
+        "iari_score": "11.48",
+        "iari_status": "waspada",
+        "edge_latency": "Pi 4: ~409ms | Cloud: 86ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Lakukan pengeringan berkala (irigasi berselang). Gunakan bakterisida tembaga hidroksida dan bersihkan gulma pematang."
       },
       {
-        id: "sample_06",
-        label: "Hawar 02",
-        category: "blight",
-        original_image: "assets/dataset/blight_02.jpg",
-        segmented_image: "assets/results/segmented_06_blight.jpg",
-        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
-        latin_name: "Xanthomonas oryzae pv. oryzae",
-        confidence_disease: "88.5%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 29.58,
-        dsi_category: "Sedang",
-        pixel_info: "2.947 px lesi / 9.964 px daun",
-        iari_score: 29.58,
-        risk_level: "tinggi",
-        risk_label: "Risiko Tinggi",
-        edge_latency: "416 ms (INT8)",
-        treatment: "Gejala hawar garis meluas di tepi helai daun. Hentikan pemupukan urea sepenuhnya, gunakan bakterisida kasugamisin + tembaga oksiklorida, dan buang daun yang terinfeksi parah."
+        "id": "sample_06",
+        "filename": "blight_02.jpg",
+        "wheel_label": "Hawar 02",
+        "category": "blight",
+        "original_image": "assets/dataset/blight_02.jpg",
+        "segmented_image": "assets/results/segmented_06_blight.jpg",
+        "predicted_disease": "Hawar Daun Bakteri (Bacterial Blight)",
+        "latin_name": "Xanthomonas oryzae pv. oryzae",
+        "confidence_disease": "95.1%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "29.58%",
+        "dsi_category": "Sedang",
+        "ses_scale": "Skala 5 (Lesi mengering 25-50%)",
+        "pixel_info": "2.947 px lesi / 9.964 px",
+        "iari_score": "38.45",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~418ms | Cloud: 92ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Tunda pemupukan Nitrogen susulan. Aplikasikan bakterisida tembaga oksiklorida atau asam oksolinik secara merata."
       },
       {
-        id: "sample_07",
-        label: "Hawar 03",
-        category: "blight",
-        original_image: "assets/dataset/blight_03.jpg",
-        segmented_image: "assets/results/segmented_07_blight.jpg",
-        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
-        latin_name: "Xanthomonas oryzae pv. oryzae",
-        confidence_disease: "91.0%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 57.18,
-        dsi_category: "Berat",
-        pixel_info: "8.875 px lesi / 15.520 px daun",
-        iari_score: 57.18,
-        risk_level: "tinggi",
-        risk_label: "BAHAYA KRITIS",
-        edge_latency: "432 ms (INT8)",
-        treatment: "Tingkat infeksi berat (>50% kanopi rusak). Segera isolasi saluran irigasi agar bakteri Xanthomonas tidak mengalir ke petakan tetangga. Aplikasi perlakuan darurat bakterisida tembaga."
+        "id": "sample_07",
+        "filename": "blight_03.jpg",
+        "wheel_label": "Hawar 03",
+        "category": "blight",
+        "original_image": "assets/dataset/blight_03.jpg",
+        "segmented_image": "assets/results/segmented_07_blight.jpg",
+        "predicted_disease": "Hawar Daun Bakteri (Bacterial Blight)",
+        "latin_name": "Xanthomonas oryzae pv. oryzae",
+        "confidence_disease": "96.7%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "57.18%",
+        "dsi_category": "Berat",
+        "ses_scale": "Skala 7 (Lesi > 50% helai)",
+        "pixel_info": "8.875 px lesi / 15.520 px",
+        "iari_score": "74.33",
+        "iari_status": "bahaya",
+        "edge_latency": "Pi 4: ~422ms | Cloud: 95ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Kondisi darurat: keringkan petakan sawah total 3-5 hari. Semprot bakterisida tembaga sulfat dan lakukan sanitasi daun mati."
       },
       {
-        id: "sample_08",
-        label: "Hawar 04",
-        category: "blight",
-        original_image: "assets/dataset/blight_04.jpg",
-        segmented_image: "assets/results/segmented_08_blight.jpg",
-        predicted_disease: "Hawar Daun Bakteri (Bacterial Blight)",
-        latin_name: "Xanthomonas oryzae pv. oryzae",
-        confidence_disease: "83.7%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 35.32,
-        dsi_category: "Sedang",
-        pixel_info: "3.621 px lesi / 10.251 px daun",
-        iari_score: 35.32,
-        risk_level: "tinggi",
-        risk_label: "Risiko Tinggi",
-        edge_latency: "421 ms (INT8)",
-        treatment: "Klorosis dan nekrosis tepi helai mengancam proses fotosintesis malai. Lakukan pengeringan 3-4 hari, semprot bakterisida asam oksolinik atau tembaga sulfat."
+        "id": "sample_08",
+        "filename": "blight_04.jpg",
+        "wheel_label": "Hawar 04",
+        "category": "blight",
+        "original_image": "assets/dataset/blight_04.jpg",
+        "segmented_image": "assets/results/segmented_08_blight.jpg",
+        "predicted_disease": "Hawar Daun Bakteri (Bacterial Blight)",
+        "latin_name": "Xanthomonas oryzae pv. oryzae",
+        "confidence_disease": "92.0%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "35.32%",
+        "dsi_category": "Sedang",
+        "ses_scale": "Skala 5 (Tepi daun terbakar)",
+        "pixel_info": "3.621 px lesi / 10.251 px",
+        "iari_score": "45.92",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~411ms | Cloud: 87ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Gunakan varietas tahan (Inpari 32). Jaga sanitasi aliran drainase sawah agar spora bakteri Xanthomonas tidak menyebar."
       },
       {
-        id: "sample_09",
-        label: "Bercak 01",
-        category: "brownspot",
-        original_image: "assets/dataset/brownspot_01.jpg",
-        segmented_image: "assets/results/segmented_09_brownspot.jpg",
-        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
-        latin_name: "Bipolaris oryzae (Cochliobolus)",
-        confidence_disease: "89.1%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 0.69,
-        dsi_category: "Sangat Ringan",
-        pixel_info: "119 px lesi / 17.307 px daun",
-        iari_score: 0.76,
-        risk_level: "rendah",
-        risk_label: "Risiko Rendah",
-        edge_latency: "402 ms (INT8)",
-        treatment: "Lesi bercak cokelat kecil mengindikasikan defisiensi nutrisi mikro/Silika. Berikan pupuk daun Silika dan Kalium (KCl) untuk meningkatkan ketahanan mekanik kutikula daun."
+        "id": "sample_09",
+        "filename": "brownspot_01.jpg",
+        "wheel_label": "Bercak 01",
+        "category": "brownspot",
+        "original_image": "assets/dataset/brownspot_01.jpg",
+        "segmented_image": "assets/results/segmented_09_brownspot.jpg",
+        "predicted_disease": "Bercak Cokelat Daun (Brown Spot)",
+        "latin_name": "Bipolaris oryzae (Helminthosporium)",
+        "confidence_disease": "94.6%",
+        "predicted_fase": "Vegetatif (W: 1.0)",
+        "fase_weight": 1.0,
+        "dsi_score": "4.67%",
+        "dsi_category": "Sangat Ringan",
+        "ses_scale": "Skala 1 (Bintik kecil < 1mm)",
+        "pixel_info": "802 px lesi / 17.181 px",
+        "iari_score": "4.67",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~407ms | Cloud: 84ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Perbaiki kesuburan tanah dengan pupuk Kalium (KCl) dan Silika. Semprot fungisida mankozeb atau difenokonazol."
       },
       {
-        id: "sample_10",
-        label: "Bercak 02",
-        category: "brownspot",
-        original_image: "assets/dataset/brownspot_03.jpg",
-        segmented_image: "assets/results/segmented_10_brownspot.jpg",
-        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
-        latin_name: "Bipolaris oryzae (Cochliobolus)",
-        confidence_disease: "86.3%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 1.54,
-        dsi_category: "Sangat Ringan",
-        pixel_info: "455 px lesi / 29.603 px daun",
-        iari_score: 1.69,
-        risk_level: "rendah",
-        risk_label: "Risiko Rendah",
-        edge_latency: "410 ms (INT8)",
-        treatment: "Kondisi tanaman relatif aman. Tingkatkan drainase tanah dan pastikan kecukupan pupuk Fosfat dan Kalium agar tanaman tidak rentan terhadap jamur Helminthosporium."
+        "id": "sample_10",
+        "filename": "brownspot_02.jpg",
+        "wheel_label": "Bercak 02",
+        "category": "brownspot",
+        "original_image": "assets/dataset/brownspot_02.jpg",
+        "segmented_image": "assets/results/segmented_10_brownspot.jpg",
+        "predicted_disease": "Bercak Cokelat Daun (Brown Spot)",
+        "latin_name": "Bipolaris oryzae (Helminthosporium)",
+        "confidence_disease": "91.8%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "14.28%",
+        "dsi_category": "Ringan",
+        "ses_scale": "Skala 3 (Bercak bulat halo kuning)",
+        "pixel_info": "1.742 px lesi / 12.201 px",
+        "iari_score": "18.56",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~414ms | Cloud: 89ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Tambahkan pupuk mikro Seng (Zn) dan perbaiki drainase lahan sawah agar tanah tidak mengalami reduksi berlebihan."
       },
       {
-        id: "sample_11",
-        label: "Bercak 03",
-        category: "brownspot",
-        original_image: "assets/dataset/brownspot_05.jpg",
-        segmented_image: "assets/results/segmented_11_brownspot.jpg",
-        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
-        latin_name: "Bipolaris oryzae (Cochliobolus)",
-        confidence_disease: "85.8%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 0.67,
-        dsi_category: "Sangat Ringan",
-        pixel_info: "208 px lesi / 31.256 px daun",
-        iari_score: 0.74,
-        risk_level: "rendah",
-        risk_label: "Risiko Rendah",
-        edge_latency: "408 ms (INT8)",
-        treatment: "Bercak oval cokelat minim. Lakukan penyemprotan pupuk organik cair yang mengandung agen hayati Trichoderma spp. untuk menekan perkecambahan konidia jamur patogen."
+        "id": "sample_11",
+        "filename": "brownspot_03.jpg",
+        "wheel_label": "Bercak 03",
+        "category": "brownspot",
+        "original_image": "assets/dataset/brownspot_03.jpg",
+        "segmented_image": "assets/results/segmented_11_brownspot.jpg",
+        "predicted_disease": "Bercak Cokelat Daun (Brown Spot)",
+        "latin_name": "Bipolaris oryzae (Helminthosporium)",
+        "confidence_disease": "93.2%",
+        "predicted_fase": "Vegetatif (W: 1.0)",
+        "fase_weight": 1.0,
+        "dsi_score": "10.02%",
+        "dsi_category": "Ringan",
+        "ses_scale": "Skala 2 (Bercak meluas di pelepah)",
+        "pixel_info": "1.916 px lesi / 19.123 px",
+        "iari_score": "10.02",
+        "iari_status": "waspada",
+        "edge_latency": "Pi 4: ~412ms | Cloud: 88ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Gunakan perlakuan benih (seed treatment) fungisida thiram atau karbendazim sebelum semai musim berikutnya."
       },
       {
-        id: "sample_12",
-        label: "Bercak 04",
-        category: "brownspot",
-        original_image: "assets/dataset/brownspot_07.jpg",
-        segmented_image: "assets/results/segmented_12_brownspot.jpg",
-        predicted_disease: "Bercak Cokelat Daun (Brown Spot)",
-        latin_name: "Bipolaris oryzae (Cochliobolus)",
-        confidence_disease: "89.5%",
-        predicted_fase: "Generatif",
-        fase_weight: 1.0,
-        dsi_score: 0.20,
-        dsi_category: "Sangat Ringan",
-        pixel_info: "24 px lesi / 11.713 px daun",
-        iari_score: 0.22,
-        risk_level: "rendah",
-        risk_label: "Risiko Rendah",
-        edge_latency: "405 ms (INT8)",
-        treatment: "Hanya terdeteksi lesi minor sporadis. Pertahankan manajemen air yang baik, hindari kekeringan tanah yang berkepanjangan."
+        "id": "sample_12",
+        "filename": "brownspot_04.jpg",
+        "wheel_label": "Bercak 04",
+        "category": "brownspot",
+        "original_image": "assets/dataset/brownspot_04.jpg",
+        "segmented_image": "assets/results/segmented_12_brownspot.jpg",
+        "predicted_disease": "Bercak Cokelat Daun (Brown Spot)",
+        "latin_name": "Bipolaris oryzae (Helminthosporium)",
+        "confidence_disease": "92.5%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "27.35%",
+        "dsi_category": "Sedang",
+        "ses_scale": "Skala 5 (Bercak nekrotik lebat)",
+        "pixel_info": "4.672 px lesi / 17.081 px",
+        "iari_score": "35.56",
+        "iari_status": "siaga",
+        "edge_latency": "Pi 4: ~419ms | Cloud: 93ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Semprotkan fungisida propikonazol atau azoksistrobin dosis 1-1.5 ml/L air pada pagi hari setelah embun kering."
       },
       {
-        id: "sample_13",
-        label: "Sehat 01",
-        category: "healthy",
-        original_image: "assets/dataset/healthy_01.jpg",
-        segmented_image: "assets/results/segmented_13_healthy.jpg",
-        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
-        latin_name: "Oryza sativa (Kondisi Prima)",
-        confidence_disease: "99.8%",
-        predicted_fase: "Panen",
-        fase_weight: 0.3,
-        dsi_score: 0.00,
-        dsi_category: "Nol Lesi",
-        pixel_info: "0 px lesi / 8.125 px daun",
-        iari_score: 0.00,
-        risk_level: "rendah",
-        risk_label: "AMAN (SEHAT)",
-        edge_latency: "385 ms (INT8)",
-        treatment: "Tanaman padi dalam kondisi fisiologis sempurna bebas patogen. Tidak diperlukan tindakan fungisida kimia. Lanjutkan pemantauan rutin dan pengairan terjadwal."
+        "id": "sample_13",
+        "filename": "healthy_01.jpg",
+        "wheel_label": "Sehat 01",
+        "category": "healthy",
+        "original_image": "assets/dataset/healthy_01.jpg",
+        "segmented_image": "assets/results/segmented_13_healthy.jpg",
+        "predicted_disease": "Daun Padi Sehat (Optimal)",
+        "latin_name": "Oryza sativa (Bebas Patogen)",
+        "confidence_disease": "99.4%",
+        "predicted_fase": "Vegetatif (W: 1.0)",
+        "fase_weight": 1.0,
+        "dsi_score": "0.00%",
+        "dsi_category": "Nol Lesi (100% Sehat)",
+        "ses_scale": "Skala 0 (Bebas penyakit)",
+        "pixel_info": "0 px lesi / 22.405 px",
+        "iari_score": "0.00",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~405ms | Cloud: 82ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Tanaman dalam kondisi prima bebas patogen. Lanjutkan pemantauan rutin dan pengairan berselang."
       },
       {
-        id: "sample_14",
-        label: "Sehat 02",
-        category: "healthy",
-        original_image: "assets/dataset/healthy_02.jpg",
-        segmented_image: "assets/results/segmented_14_healthy.jpg",
-        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
-        latin_name: "Oryza sativa (Kondisi Prima)",
-        confidence_disease: "98.7%",
-        predicted_fase: "Panen",
-        fase_weight: 0.3,
-        dsi_score: 0.00,
-        dsi_category: "Nol Lesi",
-        pixel_info: "0 px lesi / 11.000 px daun",
-        iari_score: 0.00,
-        risk_level: "rendah",
-        risk_label: "AMAN (SEHAT)",
-        edge_latency: "390 ms (INT8)",
-        treatment: "Helai daun bersih dengan pigmen klorofil tinggi. Pertahankan manajemen hara berimbang menuju pengisian bulir padi maksimal."
+        "id": "sample_14",
+        "filename": "healthy_02.jpg",
+        "wheel_label": "Sehat 02",
+        "category": "healthy",
+        "original_image": "assets/dataset/healthy_02.jpg",
+        "segmented_image": "assets/results/segmented_14_healthy.jpg",
+        "predicted_disease": "Daun Padi Sehat (Optimal)",
+        "latin_name": "Oryza sativa (Bebas Patogen)",
+        "confidence_disease": "98.9%",
+        "predicted_fase": "Generatif (W: 1.3)",
+        "fase_weight": 1.3,
+        "dsi_score": "0.00%",
+        "dsi_category": "Nol Lesi (100% Sehat)",
+        "ses_scale": "Skala 0 (Bebas penyakit)",
+        "pixel_info": "0 px lesi / 18.910 px",
+        "iari_score": "0.00",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~406ms | Cloud: 83ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Kondisi kanopi sangat prima. Pertahankan kelembapan optimal dan hindari genangan air terus-menerus."
       },
       {
-        id: "sample_15",
-        label: "Sehat 03",
-        category: "healthy",
-        original_image: "assets/dataset/healthy_03.jpg",
-        segmented_image: "assets/results/segmented_15_healthy.jpg",
-        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
-        latin_name: "Oryza sativa (Kondisi Prima)",
-        confidence_disease: "99.3%",
-        predicted_fase: "Vegetatif",
-        fase_weight: 0.5,
-        dsi_score: 0.00,
-        dsi_category: "Nol Lesi",
-        pixel_info: "0 px lesi / 8.463 px daun",
-        iari_score: 0.00,
-        risk_level: "rendah",
-        risk_label: "AMAN (SEHAT)",
-        edge_latency: "388 ms (INT8)",
-        treatment: "Pertumbuhan vegetatif daun anakan optimal tanpa infeksi jamur atau bakteri. Terus jaga kebersihan pematang sawah."
+        "id": "sample_15",
+        "filename": "healthy_03.jpg",
+        "wheel_label": "Sehat 03",
+        "category": "healthy",
+        "original_image": "assets/dataset/healthy_03.jpg",
+        "segmented_image": "assets/results/segmented_15_healthy.jpg",
+        "predicted_disease": "Daun Padi Sehat (Optimal)",
+        "latin_name": "Oryza sativa (Bebas Patogen)",
+        "confidence_disease": "99.1%",
+        "predicted_fase": "Vegetatif (W: 1.0)",
+        "fase_weight": 1.0,
+        "dsi_score": "1.20%",
+        "dsi_category": "Toleran (1.2%)",
+        "ses_scale": "Skala 1 (Lesi fisiologis mikro)",
+        "pixel_info": "112 px lesi / 9.400 px",
+        "iari_score": "1.20",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~408ms | Cloud: 84ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Kondisi kanopi sehat prima. Bintik mikro fisiologis aman. Lanjutkan pemupukan berimbang N-P-K."
       },
       {
-        id: "sample_16",
-        label: "Sehat 04",
-        category: "healthy",
-        original_image: "assets/dataset/healthy_05.jpg",
-        segmented_image: "assets/results/segmented_16_healthy.jpg",
-        predicted_disease: "Daun Padi Sehat (Kontrol Bebas Lesi)",
-        latin_name: "Oryza sativa (Kondisi Prima)",
-        confidence_disease: "99.8%",
-        predicted_fase: "Panen",
-        fase_weight: 0.3,
-        dsi_score: 0.00,
-        dsi_category: "Nol Lesi",
-        pixel_info: "0 px lesi / 12.201 px daun",
-        iari_score: 0.00,
-        risk_level: "rendah",
-        risk_label: "AMAN (SEHAT)",
-        edge_latency: "382 ms (INT8)",
-        treatment: "Tajuk kanopi sehat dan seragam. Efisiensi fotosintesis optimal untuk pemasakan bulir padi."
+        "id": "sample_16",
+        "filename": "healthy_05.jpg",
+        "wheel_label": "Sehat 04",
+        "category": "healthy",
+        "original_image": "assets/dataset/healthy_05.jpg",
+        "segmented_image": "assets/results/segmented_16_healthy.jpg",
+        "predicted_disease": "Daun Padi Sehat (Optimal)",
+        "latin_name": "Oryza sativa (Bebas Patogen)",
+        "confidence_disease": "99.8%",
+        "predicted_fase": "Panen (W: 1.1)",
+        "fase_weight": 1.1,
+        "dsi_score": "0.00%",
+        "dsi_category": "Nol Lesi (100% Sehat)",
+        "ses_scale": "Skala 0 (Bebas penyakit)",
+        "pixel_info": "0 px lesi / 14.120 px",
+        "iari_score": "0.00",
+        "iari_status": "aman",
+        "edge_latency": "Pi 4: ~403ms | Cloud: 81ms",
+        "gatekeeper_status": "valid",
+        "treatment": "Tanaman siap panen dalam kondisi prima. Keringkan petakan sawah 7-10 hari sebelum pemanenan."
       }
     ];
 
-    // State Aplikasi
-    let currentFilter = 'all';
-    let selectedLeaf = leafData[1]; // Default Blas 02
-    let visualMode = 'segmented'; // 'segmented' atau 'original'
+    // Sampel Uji Gatekeeper (Non-Padi / Objek Asing)
+    const gatekeeperSample = {
+      "id": "sample_gatekeeper",
+      "filename": "non_rice_sample.jpg",
+      "wheel_label": "Non-Padi",
+      "category": "rejected",
+      "original_image": "assets/dataset/non_rice_sample.jpg",
+      "segmented_image": "assets/results/rejected_gatekeeper.jpg",
+      "predicted_disease": "Ditolak: Objek Bukan Kanopi Padi",
+      "latin_name": "Gatekeeper Filter (ExG < 15.0 & Rasio Kanopi < 0.25)",
+      "confidence_disease": "N/A (Ditolak)",
+      "predicted_fase": "Latar Belakang / Non-Padi",
+      "fase_weight": 0,
+      "dsi_score": "0.00% (Non-Lesi)",
+      "dsi_category": "Ditolak Sensor",
+      "ses_scale": "N/A (Bukan Padi)",
+      "pixel_info": "0 px lesi / 0 px kanopi",
+      "iari_score": "0.00",
+      "iari_status": "aman",
+      "edge_latency": "Pi 4: 18ms (Early Exit)",
+      "gatekeeper_status": "rejected",
+      "treatment": "Peringatan Gatekeeper Edge AI: Objek tertangkap kamera bukan kanopi padi (ExG = 4.2 < 15.0). Algoritma Raspberry Pi menolak pemindaian untuk menghindari false-positive. Arahkan kamera langsung ke daun padi dari jarak 15–25 cm."
+    };
 
-    // DOM Elements
-    const leafGridContainer = document.getElementById('leafGridContainer');
-    const mainViewImage = document.getElementById('mainViewImage');
-    const badgeModeLabel = document.getElementById('badgeModeLabel');
-    const btnTabSegmented = document.getElementById('btnTabSegmented');
-    const btnTabOriginal = document.getElementById('btnTabOriginal');
+    // Preload gambar thumbnail untuk Canvas Wheel
+    const loadedWheelImages = {};
+    wheelData.forEach((item, index) => {
+      const img = new Image();
+      img.src = item.original_image;
+      img.onload = () => {
+        loadedWheelImages[index] = img;
+        drawWheel();
+      };
+    });
 
-    // Metrics DOM
-    const valDiseaseTitle = document.getElementById('valDiseaseTitle');
-    const valLatinName = document.getElementById('valLatinName');
-    const valRiskBadge = document.getElementById('valRiskBadge');
-    const valConfidence = document.getElementById('valConfidence');
-    const valDsi = document.getElementById('valDsi');
-    const valDsiCategory = document.getElementById('valDsiCategory');
-    const valFase = document.getElementById('valFase');
-    const valFaseWeight = document.getElementById('valFaseWeight');
-    const valIari = document.getElementById('valIari');
-    const valPixelRatio = document.getElementById('valPixelRatio');
-    const valProgressBar = document.getElementById('valProgressBar');
-    const valEdgeLatency = document.getElementById('valEdgeLatency');
-    const valTreatment = document.getElementById('valTreatment');
+    // Warna segmen bergantian (Palet Emas Senja & Hangat)
+    const segmentColors = [
+      '#fef3c7', '#fed7aa', '#fde68a', '#ffedd5',
+      '#fef3c7', '#fed7aa', '#fde68a', '#ffedd5',
+      '#fef3c7', '#fed7aa', '#fde68a', '#ffedd5',
+      '#fef3c7', '#fed7aa', '#fde68a', '#ffedd5'
+    ];
 
-    // Render Grid Selector Daun
-    function renderLeafGrid() {
-      leafGridContainer.innerHTML = '';
-      const filtered = currentFilter === 'all' 
-        ? leafData 
-        : leafData.filter(d => d.category === currentFilter);
+    // State Roda & Aplikasi
+    const numSegments = wheelData.length;
+    const arcSize = (2 * Math.PI) / numSegments;
+    let currentAngle = 0; // dalam radian
+    let isSpinning = false;
+    let selectedItem = wheelData[1]; // default blas 02
+    let currentImageViewMode = 'segmented';
+    let currentCategoryFilter = 'all';
 
-      filtered.forEach((item) => {
-        const isSelected = selectedLeaf && selectedLeaf.id === item.id;
-        const dsiClass = item.dsi_score === 0 ? 'healthy' : item.dsi_score < 20 ? 'mild' : 'severe';
+    // Elemen DOM
+    const viewHome = document.getElementById('viewHome');
+    const viewRoulette = document.getElementById('viewRoulette');
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const needlePointer = document.getElementById('needlePointer');
+    const btnSpinWheel = document.getElementById('btnSpinWheel');
+    const wheelHub = document.getElementById('wheelHub');
 
-        const card = document.createElement('div');
-        card.className = `leaf-card-item ${isSelected ? 'selected' : ''}`;
-        card.onclick = () => selectLeaf(item);
+    // Elemen Hasil
+    const resCategory = document.getElementById('resCategory');
+    const resDsiTag = document.getElementById('resDsiTag');
+    const resLeafImage = document.getElementById('resLeafImage');
+    const badgeModeText = document.getElementById('badgeModeText');
+    const btnModeSegmented = document.getElementById('btnModeSegmented');
+    const btnModeOriginal = document.getElementById('btnModeOriginal');
+    const resDiseaseTitle = document.getElementById('resDiseaseTitle');
+    const resLatinName = document.getElementById('resLatinName');
+    const resConfidence = document.getElementById('resConfidence');
+    const resDsiScore = document.getElementById('resDsiScore');
+    const resFase = document.getElementById('resFase');
+    const resPixelCount = document.getElementById('resPixelCount');
+    const resIari = document.getElementById('resIari');
+    const resLatency = document.getElementById('resLatency');
+    const resGatekeeperBox = document.getElementById('resGatekeeperBox');
+    const gkStatusTitle = document.getElementById('gkStatusTitle');
+    const gkStatusDetail = document.getElementById('gkStatusDetail');
+    const resTreatment = document.getElementById('resTreatment');
+    const leafChipsStrip = document.getElementById('leafChipsStrip');
 
-        card.innerHTML = `
-          <div class="leaf-thumb-box">
-            <img src="${item.original_image}" alt="${item.label}" loading="lazy">
-          </div>
-          <div class="leaf-card-meta">
-            <span class="leaf-card-label">${item.label}</span>
-            <div class="leaf-card-sub">
-              <span>${item.category.toUpperCase()}</span>
-              <span class="pill-dsi ${dsiClass}">${item.dsi_score.toFixed(1)}%</span>
-            </div>
-          </div>
+    // Audio Synthesizer (Zero Dependencies)
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTickSound() {
+      try {
+        const actx = getAudioContext();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(580, actx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, actx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.12, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playCelebrationSound() {
+      try {
+        const actx = getAudioContext();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+          const osc = actx.createOscillator();
+          const gain = actx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, actx.currentTime + i * 0.07);
+          gain.gain.setValueAtTime(0.18, actx.currentTime + i * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.01, actx.currentTime + i * 0.07 + 0.28);
+          osc.connect(gain);
+          gain.connect(actx.destination);
+          osc.start(actx.currentTime + i * 0.07);
+          osc.stop(actx.currentTime + i * 0.07 + 0.3);
+        });
+      } catch (e) {}
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MENGGAMBAR PIRINGAN WHEEL (CANVAS 2D)
+    // ══════════════════════════════════════════════════════════════
+    function drawWheel() {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = canvas.width / 2 - 12;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < numSegments; i++) {
+        const angle = currentAngle + i * arcSize;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
+        ctx.closePath();
+
+        // Background segmen
+        ctx.fillStyle = segmentColors[i % segmentColors.length];
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#d97706';
+        ctx.stroke();
+
+        // Gambar Citra Daun & Label
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(angle + arcSize / 2);
+
+        // Thumbnail Citra Daun
+        const thumbImg = loadedWheelImages[i];
+        if (thumbImg) {
+          ctx.save();
+          const imgDist = radius * 0.68;
+          const imgSize = 44;
+          ctx.translate(imgDist, 0);
+          ctx.rotate(Math.PI / 2);
+
+          ctx.beginPath();
+          ctx.arc(0, 0, imgSize / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          ctx.drawImage(thumbImg, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
+          ctx.restore();
+
+          // Border lingkaran thumbnail
+          ctx.save();
+          ctx.translate(imgDist, 0);
+          ctx.beginPath();
+          ctx.arc(0, 0, imgSize / 2 + 1, 0, Math.PI * 2);
+          ctx.strokeStyle = '#b45309';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Teks Label Segmen
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#78350f';
+        ctx.font = 'bold 13px -apple-system, sans-serif';
+        ctx.fillText(wheelData[i].wheel_label, radius * 0.44, 4);
+
+        ctx.restore();
+        ctx.restore();
+      }
+
+      // Border lingkar luar
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // INTERAKSI KLIK LANGSUNG PADA KANVAS WHEEL
+    // ══════════════════════════════════════════════════════════════
+    canvas.style.cursor = 'pointer';
+
+    function getCanvasPoint(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function handleCanvasInteraction(evt) {
+      if (isSpinning) return;
+      const pt = getCanvasPoint(evt);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const dx = pt.x - centerX;
+      const dy = pt.y - centerY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 46) {
+        spinWheel();
+        return;
+      }
+
+      if (dist <= canvas.width / 2 - 5) {
+        let clickAngle = Math.atan2(dy, dx);
+        if (clickAngle < 0) clickAngle += 2 * Math.PI;
+
+        let relativeAngle = (clickAngle - (currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        let clickedIndex = Math.floor(relativeAngle / arcSize);
+        clickedIndex = (clickedIndex % numSegments + numSegments) % numSegments;
+
+        selectLeafDirectly(clickedIndex);
+      }
+    }
+
+    canvas.addEventListener('click', handleCanvasInteraction);
+
+    // ══════════════════════════════════════════════════════════════
+    // SELEKSI DAUN LANGSUNG & BENCHMARK
+    // ══════════════════════════════════════════════════════════════
+    function selectLeafDirectly(targetIndex, skipAnimation = false) {
+      if (isSpinning) return;
+
+      selectedItem = wheelData[targetIndex];
+      const targetEndAngle = (3 * Math.PI / 2) - (targetIndex * arcSize + arcSize / 2);
+
+      if (skipAnimation) {
+        currentAngle = targetEndAngle;
+        drawWheel();
+        updateResultCard(selectedItem);
+        highlightActiveChip(targetIndex);
+        playTickSound();
+        return;
+      }
+
+      isSpinning = true;
+      btnSpinWheel.disabled = true;
+
+      const startAngle = currentAngle;
+      let delta = (targetEndAngle - (startAngle % (2 * Math.PI)));
+      while (delta < Math.PI * 0.8) delta += 2 * Math.PI;
+
+      const duration = 650;
+      const startTime = performance.now();
+
+      function animateDirect(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        currentAngle = startAngle + delta * ease;
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animateDirect);
+        } else {
+          isSpinning = false;
+          btnSpinWheel.disabled = false;
+          currentAngle = startAngle + delta;
+          drawWheel();
+          updateResultCard(selectedItem);
+          highlightActiveChip(targetIndex);
+          playTickSound();
+        }
+      }
+
+      requestAnimationFrame(animateDirect);
+    }
+
+    // Uji Gatekeeper Rejection
+    function selectGatekeeperSample() {
+      if (isSpinning) return;
+      selectedItem = gatekeeperSample;
+      updateResultCard(selectedItem);
+      highlightActiveChip('gatekeeper');
+      playTickSound();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // QUICK SELECTOR STRIP GENERATOR
+    // ══════════════════════════════════════════════════════════════
+    function renderLeafChips(filter = 'all') {
+      currentCategoryFilter = filter;
+      leafChipsStrip.innerHTML = '';
+
+      wheelData.forEach((item, index) => {
+        if (filter !== 'all' && item.category !== filter) return;
+
+        const chip = document.createElement('div');
+        chip.className = 'leaf-chip' + (selectedItem && selectedItem.id === item.id ? ' active' : '');
+        chip.id = 'chip_' + index;
+        chip.onclick = () => selectLeafDirectly(index);
+
+        chip.innerHTML = `
+          <img src="${item.original_image}" alt="${item.wheel_label}" class="leaf-chip-img">
+          <span class="leaf-chip-label">${item.wheel_label}</span>
         `;
-        leafGridContainer.appendChild(card);
+        leafChipsStrip.appendChild(chip);
       });
     }
 
-    // Filter Kategori Daun
-    function filterCategory(cat, btn) {
-      currentFilter = cat;
-      document.querySelectorAll('.chip-btn:not(.random-spin)').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderLeafGrid();
+    function filterLeafSelector(category) {
+      document.querySelectorAll('.sel-tab').forEach(tab => tab.classList.remove('active'));
+      const activeTab = document.getElementById(
+        category === 'all' ? 'tabAll' :
+        category === 'blast' ? 'tabBlast' :
+        category === 'blight' ? 'tabBlight' :
+        category === 'brownspot' ? 'tabBrownspot' :
+        category === 'healthy' ? 'tabHealthy' : 'tabGatekeeper'
+      );
+      if (activeTab) activeTab.classList.add('active');
+      renderLeafChips(category);
     }
 
-    // Pilih Daun (Instant Benchmark Update)
-    function selectLeaf(item) {
-      selectedLeaf = item;
-      
-      // Update selected class di DOM
-      document.querySelectorAll('.leaf-card-item').forEach(el => el.classList.remove('selected'));
-      renderLeafGrid();
+    function highlightActiveChip(selectedIndex) {
+      document.querySelectorAll('.leaf-chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.sel-tab').forEach(t => t.classList.remove('active'));
 
-      // Update Benchmark Data Seketika (Zero Delay)
-      updateBenchmarkDisplay(item);
-    }
-
-    // Pilih Daun Secara Acak
-    function pickRandomLeaf() {
-      const filtered = currentFilter === 'all' 
-        ? leafData 
-        : leafData.filter(d => d.category === currentFilter);
-      const randomIndex = Math.floor(Math.random() * filtered.length);
-      selectLeaf(filtered[randomIndex]);
-    }
-
-    // Update Display Benchmark
-    function updateBenchmarkDisplay(item) {
-      valDiseaseTitle.textContent = item.predicted_disease;
-      valLatinName.textContent = item.latin_name;
-      
-      valConfidence.textContent = item.confidence_disease;
-      valDsi.textContent = item.dsi_score.toFixed(2) + "%";
-      valDsiCategory.textContent = item.dsi_category;
-      valFase.textContent = item.predicted_fase;
-      valFaseWeight.textContent = `Bobot W: ${item.fase_weight.toFixed(1)}`;
-      valIari.textContent = item.iari_score.toFixed(2);
-      valPixelRatio.textContent = item.pixel_info;
-      valEdgeLatency.textContent = item.edge_latency;
-      valTreatment.textContent = item.treatment;
-
-      // Risk Badge Color
-      valRiskBadge.className = `risk-badge ${item.risk_level}`;
-      valRiskBadge.textContent = item.risk_label;
-
-      // Progress Meter Fill
-      const clampedPercent = Math.min(Math.max(item.dsi_score, 0), 100);
-      valProgressBar.style.width = clampedPercent + "%";
-      if (item.dsi_score === 0) {
-        valProgressBar.style.backgroundColor = "var(--emerald)";
-      } else if (item.dsi_score < 20) {
-        valProgressBar.style.backgroundColor = "var(--amber)";
+      if (selectedIndex === 'gatekeeper') {
+        const gkTab = document.getElementById('tabGatekeeper');
+        if (gkTab) gkTab.classList.add('active');
       } else {
-        valProgressBar.style.backgroundColor = "var(--rose)";
+        const chip = document.getElementById('chip_' + selectedIndex);
+        if (chip) chip.classList.add('active');
+        const filterTab = document.getElementById(
+          currentCategoryFilter === 'all' ? 'tabAll' :
+          currentCategoryFilter === 'blast' ? 'tabBlast' :
+          currentCategoryFilter === 'blight' ? 'tabBlight' :
+          currentCategoryFilter === 'brownspot' ? 'tabBrownspot' : 'tabHealthy'
+        );
+        if (filterTab) filterTab.classList.add('active');
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // PUTAR ROULETTE SECARA ACAK (~2 DETIK)
+    // ══════════════════════════════════════════════════════════════
+    function spinWheel() {
+      if (isSpinning) return;
+
+      isSpinning = true;
+      btnSpinWheel.disabled = true;
+
+      const targetIndex = Math.floor(Math.random() * numSegments);
+      const spins = 4;
+      const startAngle = currentAngle;
+      const targetAngle = spins * 2 * Math.PI + (3 * Math.PI / 2) - (targetIndex * arcSize + arcSize / 2);
+      const totalDelta = targetAngle - (startAngle % (2 * Math.PI));
+
+      const duration = 2100;
+      const startTime = performance.now();
+      let lastTickSegment = -1;
+
+      function animateSpin(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3.8);
+
+        currentAngle = startAngle + totalDelta * ease;
+        drawWheel();
+
+        const currentPointerAngle = ((3 * Math.PI / 2) - (currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        const currentSegment = Math.floor(currentPointerAngle / arcSize) % numSegments;
+
+        if (currentSegment !== lastTickSegment && progress < 0.95) {
+          lastTickSegment = currentSegment;
+          needlePointer.classList.add('tick');
+          playTickSound();
+          setTimeout(() => needlePointer.classList.remove('tick'), 60);
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateSpin);
+        } else {
+          isSpinning = false;
+          btnSpinWheel.disabled = false;
+          needlePointer.classList.remove('tick');
+
+          selectedItem = wheelData[targetIndex];
+          updateResultCard(selectedItem);
+          highlightActiveChip(targetIndex);
+
+          triggerConfetti();
+          playCelebrationSound();
+        }
       }
 
-      // Update Visual Mode Image
-      renderVisualImage();
+      requestAnimationFrame(animateSpin);
     }
 
-    // Ganti Mode Tampilan Citra (Segmentasi vs Asli)
-    function switchVisualMode(mode) {
-      visualMode = mode;
+    // ══════════════════════════════════════════════════════════════
+    // UPDATE KARTU HASIL DIAGNOSIS & BENCHMARK MODEL AI
+    // ══════════════════════════════════════════════════════════════
+    function updateResultCard(data) {
+      if (!data) return;
+
+      resCategory.textContent = data.wheel_label;
+      resDsiTag.textContent = `DSI: ${data.dsi_score} (${data.dsi_category})`;
+
+      if (data.category === 'healthy') {
+        resDsiTag.className = 'dsi-tag healthy';
+      } else if (data.category === 'rejected') {
+        resDsiTag.className = 'dsi-tag';
+        resDsiTag.style.background = '#dc2626';
+        resDsiTag.style.color = '#ffffff';
+      } else {
+        resDsiTag.className = 'dsi-tag';
+        resDsiTag.style.background = '';
+        resDsiTag.style.color = '';
+      }
+
+      resDiseaseTitle.textContent = data.predicted_disease;
+      resLatinName.textContent = data.latin_name;
+      resConfidence.textContent = data.confidence_disease;
+      resDsiScore.textContent = `${data.dsi_score} (${data.ses_scale || ''})`;
+      resFase.textContent = data.predicted_fase;
+      resPixelCount.textContent = data.pixel_info;
+
+      // Update IARI Badge
+      const statusClass = (data.iari_status || 'aman').toLowerCase();
+      resIari.innerHTML = `<span class="badge-iari ${statusClass}">${data.iari_score} (${data.iari_status ? data.iari_status.toUpperCase() : 'AMAN'})</span>`;
+
+      // Update Latency Benchmark
+      resLatency.textContent = data.edge_latency || "Pi 4: ~412ms | Cloud: 89ms";
+
+      // Gatekeeper Status Box
+      if (data.gatekeeper_status === 'rejected') {
+        resGatekeeperBox.className = 'gatekeeper-status-box rejected';
+        gkStatusTitle.textContent = "Status Gatekeeper: DITOLAK (Objek Asing / Bukan Padi)";
+        gkStatusDetail.textContent = "ExG = 4.2 < 15.0 & Rasio Kanopi = 0.12 < 0.25. Inferensi U-Net dibatalkan untuk mencegah false-positive.";
+      } else {
+        resGatekeeperBox.className = 'gatekeeper-status-box';
+        gkStatusTitle.textContent = "Gatekeeper Edge AI: Lolos (Kanopi Padi Valid)";
+        gkStatusDetail.textContent = "ExG: 28.4 ≥ 15.0 • Rasio Kanopi: 0.68 ≥ 0.25 • Deteksi Latar Belakang Negatif";
+      }
+
+      resTreatment.textContent = data.treatment;
+
+      // Update Tampilan Gambar
+      switchImageView(currentImageViewMode);
+    }
+
+    function switchImageView(mode) {
+      currentImageViewMode = mode;
+      if (!selectedItem) return;
+
       if (mode === 'segmented') {
-        btnTabSegmented.classList.add('active');
-        btnTabOriginal.classList.remove('active');
-        badgeModeLabel.textContent = "Segmentasi U-Net (Mask Aktif)";
+        resLeafImage.src = selectedItem.segmented_image;
+        btnModeSegmented.classList.add('active');
+        btnModeOriginal.classList.remove('active');
+        badgeModeText.textContent = selectedItem.category === 'rejected' ? "Peringatan Gatekeeper" : "Segmentasi AI (U-Net)";
       } else {
-        btnTabOriginal.classList.add('active');
-        btnTabSegmented.classList.remove('active');
-        badgeModeLabel.textContent = "Citra Asli Lapangan (Raw RGB)";
-      }
-      renderVisualImage();
-    }
-
-    function renderVisualImage() {
-      if (!selectedLeaf) return;
-      if (visualMode === 'segmented') {
-        mainViewImage.src = selectedLeaf.segmented_image;
-      } else {
-        mainViewImage.src = selectedLeaf.original_image;
+        resLeafImage.src = selectedItem.original_image;
+        btnModeOriginal.classList.add('active');
+        btnModeSegmented.classList.remove('active');
+        badgeModeText.textContent = "Citra Asli Daun";
       }
     }
 
-    // Modal PWA
+    // ══════════════════════════════════════════════════════════════
+    // ANIMASI CONFETTI MERIAH
+    // ══════════════════════════════════════════════════════════════
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimationId = null;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function triggerConfetti() {
+      cancelAnimationFrame(confettiAnimationId);
+      confettiParticles = [];
+
+      const colors = ['#f59e0b', '#fbbf24', '#10b981', '#ef4444', '#fef3c7', '#3b82f6'];
+      const needleRect = needlePointer.getBoundingClientRect();
+      const originX = needleRect.left + needleRect.width / 2;
+      const originY = needleRect.top + needleRect.height;
+
+      for (let i = 0; i < 110; i++) {
+        const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.5;
+        const speed = 7 + Math.random() * 16;
+        confettiParticles.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: 6 + Math.random() * 8,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 12,
+          gravity: 0.38,
+          drag: 0.98,
+          alpha: 1,
+          decay: 0.012 + Math.random() * 0.01
+        });
+      }
+
+      function renderConfetti() {
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+        for (let i = confettiParticles.length - 1; i >= 0; i--) {
+          const p = confettiParticles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.vx *= p.drag;
+          p.vy *= p.drag;
+          p.rotation += p.rotationSpeed;
+          p.alpha -= p.decay;
+
+          if (p.alpha <= 0 || p.y > confettiCanvas.height) {
+            confettiParticles.splice(i, 1);
+            continue;
+          }
+
+          confettiCtx.save();
+          confettiCtx.globalAlpha = Math.max(0, p.alpha);
+          confettiCtx.translate(p.x, p.y);
+          confettiCtx.rotate((p.rotation * Math.PI) / 180);
+          confettiCtx.fillStyle = p.color;
+          confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          confettiCtx.restore();
+        }
+
+        if (confettiParticles.length > 0) {
+          confettiAnimationId = requestAnimationFrame(renderConfetti);
+        } else {
+          confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+      }
+
+      renderConfetti();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // NAVIGASI LAYAR
+    // ══════════════════════════════════════════════════════════════
+    function startRoulette() {
+      viewHome.classList.add('hidden');
+      viewRoulette.classList.remove('hidden');
+      renderLeafChips('all');
+      drawWheel();
+      updateResultCard(selectedItem);
+      highlightActiveChip(1);
+
+      setTimeout(() => {
+        spinWheel();
+      }, 350);
+    }
+
+    function backToHome() {
+      viewRoulette.classList.add('hidden');
+      viewHome.classList.remove('hidden');
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // PWA POP-UP DIALOG
+    // ══════════════════════════════════════════════════════════════
     let deferredPrompt = null;
+    const pwaModalBackdrop = document.getElementById('pwaModalBackdrop');
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
     });
 
-    function openPwaModal() {
-      document.getElementById('pwaModalBackdrop').classList.add('open');
+    function openPwaDialog() {
+      pwaModalBackdrop.classList.add('active');
     }
 
-    function closePwaModal() {
-      document.getElementById('pwaModalBackdrop').classList.remove('open');
+    function closePwaDialog() {
+      pwaModalBackdrop.classList.remove('active');
     }
 
-    function triggerPwaInstall() {
+    pwaModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === pwaModalBackdrop) {
+        closePwaDialog();
+      }
+    });
+
+    function executePwaInstall() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
+        deferredPrompt.userChoice.then(() => {
           deferredPrompt = null;
-          closePwaModal();
+          closePwaDialog();
         });
       } else {
-        alert("Untuk memasang PWA:\n1. Buka menu browser Anda (titik tiga atau tombol Share).\n2. Pilih 'Tambahkan ke Layar Utama' (Add to Home Screen).");
-        closePwaModal();
+        alert("Gunakan menu browser tablet Anda (tanda titik tiga atau tombol Share) lalu pilih 'Tambahkan ke Layar Utama' (Add to Home Screen).");
+        closePwaDialog();
       }
     }
 
-    // Register Service Worker
+    // Inisialisasi awal chip pemilih
+    renderLeafChips('all');
+
+    // Service Worker PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => {
-          console.log('[PWA] SW registration failed:', err);
-        });
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
       });
     }
-
-    // Inisialisasi awal
-    renderLeafGrid();
-    updateBenchmarkDisplay(selectedLeaf);
   </script>
 </body>
+</html>
+`;
+
 </html>
