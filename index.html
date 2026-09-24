@@ -1005,6 +1005,180 @@
     .badge-iari.siaga { background: #ffedd5; color: #c2410c; }
     .badge-iari.bahaya { background: #fee2e2; color: #991b1b; }
 
+  
+    /* ══════════════════════════════════════════════════════════════
+       KARTU UTAMA INDEKS RISIKO AGRONOMIS TERINTEGRASI (IARI)
+       ══════════════════════════════════════════════════════════════ */
+    .iari-highlight-card {
+      background: #ffffff;
+      border: 2px solid #b45309;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 0 #78350f, 0 6px 14px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .iari-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .iari-title-badge {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #78350f;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-iari-status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .badge-iari-status.aman { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    .badge-iari-status.waspada { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .badge-iari-status.siaga { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+    .badge-iari-status.bahaya { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .badge-iari-status.ditolak { background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }
+
+    .iari-score-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0 10px;
+    }
+
+    .iari-number-box {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .iari-score-val {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #1c1917;
+      line-height: 1;
+    }
+
+    .iari-score-unit {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .iari-formula-box {
+      flex: 1;
+      text-align: right;
+    }
+
+    .iari-formula-text code {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #92400e;
+      background: #fef3c7;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #fde68a;
+      display: inline-block;
+    }
+
+    .iari-breakdown-text {
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .iari-risk-meter {
+      margin-top: 2px;
+    }
+
+    .iari-meter-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .iari-meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+      background-color: #f59e0b;
+    }
+
+    .iari-meter-fill.aman { background-color: #10b981; }
+    .iari-meter-fill.waspada { background-color: #f59e0b; }
+    .iari-meter-fill.siaga { background-color: #ea580c; }
+    .iari-meter-fill.bahaya { background-color: #dc2626; }
+    .iari-meter-fill.ditolak { background-color: #9ca3af; }
+
+    .iari-meter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: 4px;
+      padding: 0 1px;
+    }
+
+    /* Latency benchmark card */
+    .latency-benchmark-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .latency-col {
+      flex: 1;
+    }
+
+    .latency-col.text-right {
+      text-align: right;
+    }
+
+    .latency-label {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .latency-val {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .latency-sep {
+      width: 1px;
+      height: 28px;
+      background: #e5e7eb;
+      margin: 0 12px;
+    }
+
   </style>
 </head>
 <body>
@@ -1042,12 +1216,12 @@
 
           <h1 class="welcome-title">Pemantauan & Diagnosis Penyakit Padi</h1>
           <p class="welcome-desc">
-            Sistem deteksi cerdas berbasis U-Net Semantic Segmentation dan Edge-AI Classifier. Memindai kontur lesi daun, menghitung indeks keparahan DSI nyata, dan mendiagnosis patogen tanaman padi secara instan.
+            Sistem cerdas berbasis U-Net Semantic Segmentation dan Edge-AI Classifier. Memindai kontur lesi daun, mengukur indeks keparahan DSI, dan mengkalkulasi skor risiko agronomis IARI pada tanaman padi.
           </p>
 
           <div>
             <button class="btn-start-now" onclick="startRoulette()">
-              <span>MULAI SEKARANG</span>
+              <span>MULAI DIAGNOSIS</span>
               <svg style="width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
@@ -1065,9 +1239,9 @@
           <div class="roulette-title-group">
             <h2>
               <svg style="width:20px;height:20px;stroke:var(--gold-dark);fill:none;stroke-width:2.2;vertical-align:middle;" viewBox="0 0 24 24"><path d="M12 22C12 12 20 8 20 8s-4 8-8 14z"/><path d="M12 22C12 16 7 13 4 14"/></svg>
-              <span>Roda Kolase Daun Padi (AI Spin Wheel)</span>
+              <span>Pengujian Sampel Daun Padi</span>
             </h2>
-            <p>Arahkan jarum penunjuk ke sampel daun untuk melihat segmentasi U-Net & metrik keparahan lesi.</p>
+            <p>Pilih sampel daun di bawah atau putar roda untuk menganalisis segmentasi lesi U-Net, keparahan DSI, dan skor risiko IARI.</p>
           </div>
           <div class="roulette-top-actions">
             <button class="btn-icon-text" onclick="openPwaDialog()">
@@ -1107,16 +1281,16 @@
             <div class="wheel-controls">
               <button class="btn-spin" id="btnSpinWheel" onclick="spinWheel()">
                 <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                <span>Putar Roulette Daun</span>
+                <span>Putar Sampel Acak</span>
               </button>
-              <span class="spin-hint">Durasi putaran cepat & gesit (~2 detik) atau klik langsung daun</span>
+              <span class="spin-hint">Klik tombol untuk pengujian acak, atau pilih langsung salah satu sampel daun di bawah.</span>
 
               <!-- Quick Selector Daun Interaktif -->
               <div class="leaf-quick-selector">
                 <div class="selector-header">
                   <span class="selector-title">
                     <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <span>Pilih Daun Langsung (Benchmark Instan):</span>
+                    <span>Daftar Sampel Daun:</span>
                   </span>
                 </div>
                 <div class="selector-tabs">
@@ -1125,7 +1299,7 @@
                   <button class="sel-tab" id="tabBlight" onclick="filterLeafSelector('blight')">Hawar</button>
                   <button class="sel-tab" id="tabBrownspot" onclick="filterLeafSelector('brownspot')">Bercak</button>
                   <button class="sel-tab" id="tabHealthy" onclick="filterLeafSelector('healthy')">Sehat</button>
-                  <button class="sel-tab gatekeeper" id="tabGatekeeper" onclick="selectGatekeeperSample()">⚠️ Uji Non-Padi</button>
+                  <button class="sel-tab gatekeeper" id="tabGatekeeper" onclick="selectGatekeeperSample()">Uji Non-Padi (Gatekeeper)</button>
                 </div>
                 <div class="leaf-chips-strip" id="leafChipsStrip"></div>
               </div>
@@ -1168,10 +1342,51 @@
             <!-- Detail Diagnosis AI Nyata -->
             
             <!-- Detail Diagnosis AI Nyata & Benchmark -->
+            
+            <!-- Detail Diagnosis AI & Benchmark -->
             <div>
-              <h3 class="disease-name-title" id="resDiseaseTitle">Penyakit Blas Daun (Pyricularia)</h3>
+              <h3 class="disease-name-title" id="resDiseaseTitle">Blas Daun (Rice Blast)</h3>
               <p class="latin-name-sub" id="resLatinName">Pyricularia oryzae (Magnaporthe)</p>
 
+              <!-- KARTU UTAMA INDEKS RISIKO AGRONOMIS (IARI) -->
+              <div class="iari-highlight-card" id="iariCard">
+                <div class="iari-card-header">
+                  <div class="iari-title-badge">
+                    <svg style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>Indeks Risiko Agronomis Terintegrasi (IARI)</span>
+                  </div>
+                  <span class="badge-iari-status siaga" id="resIariBadge">SIAGA</span>
+                </div>
+                
+                <div class="iari-score-display">
+                  <div class="iari-number-box">
+                    <span class="iari-score-val" id="resIariScore">19.08</span>
+                    <span class="iari-score-unit">/ 100</span>
+                  </div>
+                  <div class="iari-formula-box">
+                    <div class="iari-formula-text">
+                      <code>IARI = (DSI &times; W<sub>fase</sub>) &times; C<sub>cuaca</sub></code>
+                    </div>
+                    <div class="iari-breakdown-text" id="resIariBreakdown">
+                      (14.68% &times; 1.3) &times; 1.0 = 19.08
+                    </div>
+                  </div>
+                </div>
+
+                <div class="iari-risk-meter">
+                  <div class="iari-meter-bar">
+                    <div class="iari-meter-fill siaga" id="resIariMeterFill" style="width: 38%;"></div>
+                  </div>
+                  <div class="iari-meter-labels">
+                    <span>Aman (&lt;10)</span>
+                    <span>Waspada (10-20)</span>
+                    <span>Siaga (20-50)</span>
+                    <span>Bahaya (&ge;50)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Metrik Diagnosis Inti -->
               <div class="metrics-grid-2col">
                 <div class="metric-item-box">
                   <span>Akurasi Model</span>
@@ -1182,30 +1397,35 @@
                   <strong id="resDsiScore">14.68% (Skala 3)</strong>
                 </div>
                 <div class="metric-item-box">
-                  <span>Fase Tumbuh & Bobot</span>
-                  <strong id="resFase">Generatif (W: 1.3)</strong>
+                  <span>Fase Pertumbuhan</span>
+                  <strong id="resFase">Generatif (Bobot W: 1.3)</strong>
                 </div>
                 <div class="metric-item-box">
                   <span>Segmentasi Lesi U-Net</span>
                   <strong id="resPixelCount">2.790 px lesi / 19.001 px</strong>
                 </div>
-                <div class="metric-item-box">
-                  <span>Indeks Risiko IARI</span>
-                  <strong id="resIari"><span class="badge-iari siaga">19.08 (Siaga)</span></strong>
+              </div>
+
+              <!-- Telemetri Latensi Model (Edge vs Cloud) -->
+              <div class="latency-benchmark-box">
+                <div class="latency-col">
+                  <span class="latency-label">Raspberry Pi 4 (INT8 TFLite)</span>
+                  <strong class="latency-val" id="resEdgeLatency">412 ms</strong>
                 </div>
-                <div class="metric-item-box">
-                  <span>Benchmark Latensi</span>
-                  <strong id="resLatency" style="font-size:0.82rem;">Pi 4: ~412ms | Cloud: 89ms</strong>
+                <div class="latency-sep"></div>
+                <div class="latency-col text-right">
+                  <span class="latency-label">Cloud Server (FP32 GPU)</span>
+                  <strong class="latency-val" id="resCloudLatency">89 ms</strong>
                 </div>
               </div>
 
-              <!-- Gatekeeper Edge AI Status Box -->
+              <!-- Validasi Kanopi Gatekeeper -->
               <div class="gatekeeper-status-box" id="resGatekeeperBox">
                 <div class="gk-status-header">
                   <svg id="gkIcon" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <span id="gkStatusTitle">Gatekeeper Edge AI: Lolos (Kanopi Valid)</span>
+                  <span id="gkStatusTitle">Validasi Kanopi Gatekeeper: Lolos (Kanopi Padi Valid)</span>
                 </div>
-                <p id="gkStatusDetail">ExG: 28.4 &ge; 15.0 &bull; Rasio Kanopi: 0.68 &ge; 0.25 &bull; Deteksi Latar Belakang Negatif</p>
+                <p id="gkStatusDetail">Nilai ExG: 28.4 (Ambang Batas &ge; 15.0) &bull; Rasio Kanopi: 0.68 (Ambang Batas &ge; 0.25) &bull; Latar Belakang Negatif</p>
               </div>
 
               <div class="treatment-callout">
@@ -1670,8 +1890,12 @@
     const resDsiScore = document.getElementById('resDsiScore');
     const resFase = document.getElementById('resFase');
     const resPixelCount = document.getElementById('resPixelCount');
-    const resIari = document.getElementById('resIari');
-    const resLatency = document.getElementById('resLatency');
+    const resIariBadge = document.getElementById('resIariBadge');
+    const resIariScore = document.getElementById('resIariScore');
+    const resIariBreakdown = document.getElementById('resIariBreakdown');
+    const resIariMeterFill = document.getElementById('resIariMeterFill');
+    const resEdgeLatency = document.getElementById('resEdgeLatency');
+    const resCloudLatency = document.getElementById('resCloudLatency');
     const resGatekeeperBox = document.getElementById('resGatekeeperBox');
     const gkStatusTitle = document.getElementById('gkStatusTitle');
     const gkStatusDetail = document.getElementById('gkStatusDetail');
@@ -2031,6 +2255,8 @@
 
       if (data.category === 'healthy') {
         resDsiTag.className = 'dsi-tag healthy';
+        resDsiTag.style.background = '';
+        resDsiTag.style.color = '';
       } else if (data.category === 'rejected') {
         resDsiTag.className = 'dsi-tag';
         resDsiTag.style.background = '#dc2626';
@@ -2048,22 +2274,43 @@
       resFase.textContent = data.predicted_fase;
       resPixelCount.textContent = data.pixel_info;
 
-      // Update IARI Badge
-      const statusClass = (data.iari_status || 'aman').toLowerCase();
-      resIari.innerHTML = `<span class="badge-iari ${statusClass}">${data.iari_score} (${data.iari_status ? data.iari_status.toUpperCase() : 'AMAN'})</span>`;
+      // Update IARI Card
+      const iariVal = parseFloat(data.iari_score) || 0;
+      resIariScore.textContent = data.iari_score;
+      const statusLower = (data.iari_status || 'aman').toLowerCase();
+      resIariBadge.textContent = (data.iari_status || 'AMAN').toUpperCase();
+      resIariBadge.className = 'badge-iari-status ' + statusLower;
 
-      // Update Latency Benchmark
-      resLatency.textContent = data.edge_latency || "Pi 4: ~412ms | Cloud: 89ms";
+      if (data.gatekeeper_status === 'rejected') {
+        resIariBreakdown.textContent = "Kalkulasi IARI dibatalkan (bukan kanopi padi)";
+        resIariMeterFill.style.width = '0%';
+        resIariMeterFill.className = 'iari-meter-fill ditolak';
+      } else {
+        resIariBreakdown.textContent = `(${data.dsi_score} × ${data.fase_weight}) × 1.0 = ${data.iari_score}`;
+        const meterPercent = Math.min(Math.max((iariVal / 70) * 100, 4), 100);
+        resIariMeterFill.style.width = `${meterPercent}%`;
+        resIariMeterFill.className = 'iari-meter-fill ' + statusLower;
+      }
 
-      // Gatekeeper Status Box
+      // Update Telemetri Latensi
+      if (data.edge_latency) {
+        const parts = data.edge_latency.split('|');
+        resEdgeLatency.textContent = parts[0] ? parts[0].replace('Pi 4:', '').trim() : '412 ms';
+        resCloudLatency.textContent = parts[1] ? parts[1].replace('Cloud:', '').trim() : '89 ms';
+      } else {
+        resEdgeLatency.textContent = '412 ms';
+        resCloudLatency.textContent = '89 ms';
+      }
+
+      // Validasi Kanopi Gatekeeper Box
       if (data.gatekeeper_status === 'rejected') {
         resGatekeeperBox.className = 'gatekeeper-status-box rejected';
-        gkStatusTitle.textContent = "Status Gatekeeper: DITOLAK (Objek Asing / Bukan Padi)";
-        gkStatusDetail.textContent = "ExG = 4.2 < 15.0 & Rasio Kanopi = 0.12 < 0.25. Inferensi U-Net dibatalkan untuk mencegah false-positive.";
+        gkStatusTitle.textContent = "Validasi Kanopi Gatekeeper: Ditolak (Bukan Kanopi Padi)";
+        gkStatusDetail.textContent = "Nilai ExG: 4.2 (< 15.0) • Rasio Kanopi: 0.12 (< 0.25). Inferensi U-Net dibatalkan untuk menghindari hasil positif palsu.";
       } else {
         resGatekeeperBox.className = 'gatekeeper-status-box';
-        gkStatusTitle.textContent = "Gatekeeper Edge AI: Lolos (Kanopi Padi Valid)";
-        gkStatusDetail.textContent = "ExG: 28.4 ≥ 15.0 • Rasio Kanopi: 0.68 ≥ 0.25 • Deteksi Latar Belakang Negatif";
+        gkStatusTitle.textContent = "Validasi Kanopi Gatekeeper: Lolos (Kanopi Padi Valid)";
+        gkStatusDetail.textContent = "Nilai ExG: 28.4 (≥ 15.0) • Rasio Kanopi: 0.68 (≥ 0.25) • Latar Belakang Negatif";
       }
 
       resTreatment.textContent = data.treatment;
