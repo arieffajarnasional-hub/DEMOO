@@ -8,5 +8,8 @@
   },
   "keywords": ["arisa", "edge-ai", "rice-leaf-diagnostic", "pwa", "railway"],
   "author": "Arief Fajar & ARISA Team",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

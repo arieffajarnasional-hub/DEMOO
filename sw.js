@@ -1,11 +1,10 @@
-const CACHE_NAME = 'arisa-pwa-v4';
+const CACHE_NAME = 'arisa-pwa-v5';
 const APP_SHELL = [
+  './',
   './index.html',
   './manifest.json',
-  './hero_sunset.jpg',
-  './assets/card_motif.jpg',
-  './assets/mascot.png',
-  './assets/results/dataset_results.json'
+  './icon.svg',
+  './assets/logo/logo-full.svg'
 ];
 
 self.addEventListener('install', (event) => {
